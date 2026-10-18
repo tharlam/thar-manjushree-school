@@ -1,7 +1,9 @@
 /* eslint-disable react-refresh/only-export-components */
+import { useState } from 'react'
 import { useLanguage } from '../../i18n.jsx'
 import { useAppStore } from '../../store.jsx'
-import { colors, font, radii, shadows } from '../../theme.js'
+import { layout, radii } from '../../theme.js'
+import { cn } from '../../lib/cn.js'
 
 export function useField(page, field) {
   const { content } = useAppStore()
@@ -11,54 +13,94 @@ export function useField(page, field) {
   return node[lang] || node.en || ''
 }
 
-export function PageHero({ title, subtitle, kicker }) {
+/* A premium image slot with an elegant fallback until real photography is supplied. */
+export function Photo({ src, alt = '', ratio = '4 / 3', radius = radii.lg, className, style, imgStyle, fallbackLabel }) {
+  const [failed, setFailed] = useState(false)
+  const [loaded, setLoaded] = useState(false)
+
   return (
     <div
-      style={{
-        background: `linear-gradient(120deg, ${colors.sidebar} 0%, ${colors.primaryDark} 55%, ${colors.primary} 100%)`,
-        color: '#fff',
-        padding: '52px 20px 46px',
-        textAlign: 'center',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
+      className={cn(
+        'media-fallback relative flex w-full items-center justify-center bg-linear-to-br from-ink via-pine to-[#24544D] shadow-card',
+        className,
+      )}
+      style={{ aspectRatio: ratio, borderRadius: radius, ...style }}
     >
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          opacity: 0.08,
-          fontSize: 220,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontWeight: 900,
-          color: '#fff',
-          userSelect: 'none',
-        }}
-      >
-        ད
-      </div>
-      <div style={{ position: 'relative', maxWidth: 820, margin: '0 auto' }}>
-        {kicker && (
-          <p style={{ margin: '0 0 8px', fontSize: 12, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: '#E5B98B' }}>{kicker}</p>
-        )}
-        <h1 style={{ margin: 0, fontSize: 32, fontWeight: 800, letterSpacing: '-0.4px', lineHeight: 1.2 }}>{title}</h1>
-        {subtitle && <p style={{ margin: '12px auto 0', fontSize: 15, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', maxWidth: 660 }}>{subtitle}</p>}
-      </div>
+      {!failed && src ? (
+        <>
+          <img
+            src={src}
+            alt={alt}
+            loading="lazy"
+            onError={() => setFailed(true)}
+            onLoad={() => setLoaded(true)}
+            className={cn(
+              'absolute inset-0 h-full w-full object-cover transition-opacity duration-500',
+              loaded ? 'opacity-100' : 'opacity-0',
+            )}
+            style={{ borderRadius: radius, ...imgStyle }}
+          />
+        </>
+      ) : (
+        <div className="relative p-5 text-center text-white/92">
+          <div className="relative">
+            <div className="mx-auto my-2.5 h-0.5 w-[46px] bg-sage-light" />
+            <div className="text-[12px] font-semibold tracking-[1.6px] text-white/75 uppercase">
+              {fallbackLabel || 'Photograph coming soon'}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
 
-export function Section({ title, subtitle, children, style, eyebrow }) {
+export function PageHero({ title, subtitle, kicker, media, children }) {
   return (
-    <section style={{ padding: '36px 20px', ...style }}>
-      <div style={{ maxWidth: 1080, margin: '0 auto' }}>
+    <div className="relative overflow-hidden bg-linear-to-br from-ink via-pine to-[#285848] pt-16 pb-[60px] text-center text-white">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_90%_at_50%_110%,rgba(136,184,152,0.28)_0%,rgba(136,184,152,0)_60%)]" />
+      <div className="relative mx-auto max-w-[1240px] px-[22px]">
+        {kicker && (
+          <p className="mb-3 text-[12px] font-bold tracking-[2.4px] text-sage-light uppercase">
+            {kicker}
+          </p>
+        )}
+        <h1 className="m-0 font-heading text-[clamp(30px,4.6vw,46px)] leading-[1.15] font-bold tracking-[-0.3px]">
+          {title}
+        </h1>
+        {subtitle && (
+          <p className="mx-auto mt-4 max-w-[680px] text-[15.5px] leading-[1.7] font-normal text-white/86">
+            {subtitle}
+          </p>
+        )}
+        {children}
+      </div>
+      {media && <div className="pointer-events-none absolute -right-10 -bottom-15 opacity-25">{media}</div>}
+    </div>
+  )
+}
+
+export function Section({ id, title, subtitle, eyebrow, children, className, style, align = 'center', maxWidth = layout.maxWidth }) {
+  return (
+    <section id={id} className={cn('py-[54px]', id && 'scroll-mt-[84px]', className)} style={style}>
+      <div className="mx-auto px-[22px]" style={{ maxWidth }}>
         {(eyebrow || title) && (
-          <div style={{ marginBottom: 22, textAlign: 'center' }}>
-            {eyebrow && <p style={{ margin: '0 0 6px', fontSize: 12, fontWeight: 700, letterSpacing: '1.6px', textTransform: 'uppercase', color: colors.accent }}>{eyebrow}</p>}
-            {title && <h2 style={{ margin: 0, fontSize: 26, fontWeight: 800, color: colors.text, letterSpacing: '-0.3px' }}>{title}</h2>}
-            {subtitle && <p style={{ margin: '8px auto 0', fontSize: 14.5, color: colors.muted, maxWidth: 640, lineHeight: 1.6 }}>{subtitle}</p>}
+          <div className={cn('mb-7', align === 'left' ? 'text-left' : 'text-center')}>
+            {eyebrow && (
+              <p className="mb-2 text-[11.5px] font-bold tracking-[2px] text-sage uppercase">
+                {eyebrow}
+              </p>
+            )}
+            {title && (
+              <h2 className="m-0 font-heading text-[clamp(24px,3.2vw,32px)] font-bold tracking-[-0.4px] text-ink">
+                {title}
+              </h2>
+            )}
+            {subtitle && (
+              <p className="mx-auto mt-3 max-w-[660px] text-[15px] leading-[1.7] font-normal text-muted">
+                {subtitle}
+              </p>
+            )}
           </div>
         )}
         {children}
@@ -77,60 +119,3 @@ export function ContentBlock({ page, titleField, bodyField, children }) {
   )
 }
 
-export function Tile({ children, style }) {
-  return (
-    <div
-      style={{
-        background: colors.surface,
-        border: `1px solid ${colors.border}`,
-        borderRadius: radii.lg,
-        boxShadow: shadows.card,
-        padding: 20,
-        ...style,
-      }}
-    >
-      {children}
-    </div>
-  )
-}
-
-export const fieldStyles = {
-  label: { display: 'flex', flexDirection: 'column', gap: 6, flex: 1, minWidth: 180 },
-  labelText: { fontSize: 12, fontWeight: 600, color: colors.textSoft },
-  input: {
-    padding: '10px 12px',
-    borderRadius: radii.md,
-    border: `1px solid ${colors.border}`,
-    background: colors.surface,
-    color: colors.text,
-    fontSize: 13.5,
-    fontFamily: font.sans,
-    outline: 'none',
-    width: '100%',
-    transition: 'border-color .15s ease, box-shadow .15s ease',
-  },
-  textarea: {
-    padding: '10px 12px',
-    borderRadius: radii.md,
-    border: `1px solid ${colors.border}`,
-    background: colors.surface,
-    color: colors.text,
-    fontSize: 13.5,
-    fontFamily: font.sans,
-    outline: 'none',
-    width: '100%',
-    resize: 'vertical',
-    minHeight: 90,
-  },
-  submit: {
-    padding: '11px 22px',
-    borderRadius: radii.md,
-    background: colors.primary,
-    color: '#fff',
-    border: 'none',
-    fontSize: 14,
-    fontWeight: 700,
-    cursor: 'pointer',
-    fontFamily: font.sans,
-  },
-}

@@ -1,16 +1,24 @@
 import { Fragment, useMemo, useState } from 'react'
-import { useLanguage } from '../i18n.jsx'
-import { colors, radii } from '../theme.js'
+import { colors } from '../theme.js'
+import { cn } from '../lib/cn.js'
 import { Card, CardHeader, Badge, Button, Input, Select, PageHeader, EmptyState, statusTone, ProgressBar } from '../components/ui.jsx'
 import { IconSearch, IconPlus, IconChevron, IconMonks, IconFees, IconShield, IconUser, IconCheck, IconX } from '../components/icons.jsx'
 import { classes } from '../data/index.js'
 import { useAppStore } from '../store.jsx'
+import { useLanguage } from '../i18n.jsx'
 
 const statusKeys = ['enrolled', 'pending', 'graduated', 'withdrawn']
 
+const statusLabels = {
+  enrolled: 'Enrolled',
+  pending: 'Pending',
+  graduated: 'Graduated',
+  withdrawn: 'Withdrawn',
+}
+
 export default function MonksRoster() {
-  const { t } = useLanguage()
   const { monks: storeMonks, admissions, addMonk, setAdmissionStatus } = useAppStore()
+  const { t } = useLanguage()
   const [query, setQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [classFilter, setClassFilter] = useState('all')
@@ -46,10 +54,10 @@ export default function MonksRoster() {
   }
 
   const summary = [
-    { label: t('roster.totalMonks'), value: monks.length, color: colors.primary },
-    { label: t('statuses.enrolled'), value: counts.enrolled, color: colors.success },
-    { label: t('statuses.pending'), value: counts.pending + pendingAdmissions.length, color: colors.warning },
-    { label: t('roster.activeNow'), value: counts.activeNow, color: colors.accent },
+    { label: 'Total Monks', value: monks.length, border: 'border-t-pine' },
+    { label: 'Enrolled', value: counts.enrolled, border: 'border-t-success' },
+    { label: 'Pending', value: counts.pending + pendingAdmissions.length, border: 'border-t-warning' },
+    { label: 'Active this term', value: counts.activeNow, border: 'border-t-sage' },
   ]
 
   const approveAdmission = (a) => {
@@ -86,54 +94,54 @@ export default function MonksRoster() {
   return (
     <div>
       <PageHeader
-        title={t('roster.title')}
-        subtitle={t('roster.subtitle')}
+        title="Monks Roster"
+        subtitle="Directory of all student monks"
         actions={
-          <Button icon={<IconPlus size={16} />} onClick={() => setAdding((v) => !v)}>{t('roster.addMonk')}</Button>
+          <Button icon={<IconPlus size={16} />} onClick={() => setAdding((v) => !v)}>Add Monk</Button>
         }
       />
 
       {adding && (
-        <Card pad={18} style={{ marginBottom: 18, borderLeft: `3px solid ${colors.primary}` }}>
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'flex-end' }}>
-            <Input label={t('common.name')} value={newName} onChange={setNewName} placeholder={t('roster.namePlaceholder')} style={{ flex: 2, minWidth: 220 }} />
+        <Card pad={18} className="mb-4.5 border-l-[3px] border-l-pine">
+          <div className="flex flex-wrap items-end gap-3">
+            <Input label="Name" value={newName} onChange={setNewName} placeholder="Enter full name…" className="flex-[2] min-w-[220px]" />
             <Select
-              label={t('roster.filterClass')}
+              label="Filter by class"
               value={newClass}
               onChange={setNewClass}
               options={classes.map((c) => ({ value: c.id, label: c.name }))}
-              style={{ flex: 1, minWidth: 180 }}
+              className="flex-1 min-w-[180px]"
             />
-            <Button tone="success" icon={<IconPlus size={15} />} onClick={submitNewMonk}>{t('roster.saveMonk')}</Button>
-            <Button tone="ghost" onClick={() => setAdding(false)}>{t('common.cancel')}</Button>
+            <Button tone="success" icon={<IconPlus size={15} />} onClick={submitNewMonk}>Save Monk</Button>
+            <Button tone="ghost" onClick={() => setAdding(false)}>Cancel</Button>
           </div>
         </Card>
       )}
 
       {pendingAdmissions.length > 0 && (
-        <Card pad={18} style={{ marginBottom: 18, borderLeft: `3px solid ${colors.warning}` }}>
-          <CardHeader title={t('roster.pendingTitle')} subtitle={t('roster.pendingHint')} />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12 }}>
+        <Card pad={18} className="mb-4.5 border-l-[3px] border-l-warning">
+          <CardHeader title="Pending Admissions" subtitle="Applications submitted from the public website awaiting review" />
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3">
             {pendingAdmissions.map((a) => (
-              <div key={a.id} style={{ padding: '12px 14px', borderRadius: radii.md, background: colors.surfaceAlt, border: `1px solid ${colors.border}` }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ width: 34, height: 34, borderRadius: '50%', background: colors.warningSoft, color: colors.warning, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800 }}>
+              <div key={a.id} className="rounded-md border border-line bg-surface-alt px-3.5 py-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="inline-flex size-[34px] items-center justify-center rounded-full bg-warning-soft text-[11px] font-extrabold text-warning">
                     {a.name.split(' ').map((p) => p[0]).slice(0, 2).join('').toUpperCase()}
                   </span>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ margin: 0, fontSize: 13.5, fontWeight: 700, color: colors.text }}>{a.name}</p>
-                    <p style={{ margin: '2px 0 0', fontSize: 11.5, color: colors.muted }}>
-                      {t('common.className')}: {classLabel(a.classRequested)} · {a.submittedAt}
+                  <div className="min-w-0 flex-1">
+                    <p className="m-0 text-[13.5px] font-bold text-ink">{a.name}</p>
+                    <p className="mt-0.5 mb-0 text-[11.5px] text-muted">
+                      Class: {classLabel(a.classRequested)} · {a.submittedAt}
                     </p>
                   </div>
                 </div>
-                <p style={{ margin: '10px 0 0', fontSize: 12, color: colors.textSoft }}>
-                  {a.guardian && <span>{t('roster.guardian')}: {a.guardian} · </span>}
+                <p className="mt-2.5 mb-0 text-[12px] text-body">
+                  {a.guardian && <span>Guardian: {a.guardian} · </span>}
                   {a.phone || a.email || ''}
                 </p>
-                <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-                  <Button size="sm" tone="success" icon={<IconCheck size={14} />} onClick={() => approveAdmission(a)}>{t('roster.approve')}</Button>
-                  <Button size="sm" tone="danger" icon={<IconX size={14} />} onClick={() => setAdmissionStatus(a.id, 'declined')}>{t('roster.decline')}</Button>
+                <div className="mt-3 flex gap-2">
+                  <Button size="sm" tone="success" icon={<IconCheck size={14} />} onClick={() => approveAdmission(a)}>Approve</Button>
+                  <Button size="sm" tone="danger" icon={<IconX size={14} />} onClick={() => setAdmissionStatus(a.id, 'declined')}>Decline</Button>
                 </div>
               </div>
             ))}
@@ -141,48 +149,48 @@ export default function MonksRoster() {
         </Card>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 14, marginBottom: 18 }}>
+      <div className="mb-4.5 grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-3.5">
         {summary.map((s) => (
-          <Card key={s.label} pad={16} style={{ borderTop: `3px solid ${s.color}` }}>
-            <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: colors.muted }}>{s.label}</p>
-            <p style={{ margin: '6px 0 0', fontSize: 26, fontWeight: 800, color: colors.text }}>{s.value}</p>
+          <Card key={s.label} pad={16} className={cn('border-t-[3px]', s.border)}>
+            <p className="m-0 text-[12px] font-semibold text-muted">{s.label}</p>
+            <p className="mt-1.5 mb-0 text-[26px] font-extrabold text-ink">{s.value}</p>
           </Card>
         ))}
       </div>
 
       <Card pad={18}>
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 16, alignItems: 'flex-end' }}>
+        <div className="mb-4 flex flex-wrap items-end gap-3">
           <Input
             value={query}
             onChange={setQuery}
-            placeholder={t('roster.search')}
+            placeholder="Search by name or ID…"
             icon={<IconSearch size={15} />}
-            style={{ flex: 2, minWidth: 240 }}
+            className="flex-[2] min-w-[240px]"
           />
           <Select
-            label={t('roster.filterStatus')}
+            label="Filter by status"
             value={statusFilter}
             onChange={setStatusFilter}
-            options={[{ value: 'all', label: t('common.all') }, ...statusKeys.map((k) => ({ value: k, label: t(`statuses.${k}`) }))]}
+            options={[{ value: 'all', label: 'All' }, ...statusKeys.map((k) => ({ value: k, label: statusLabels[k] }))]}
           />
           <Select
-            label={t('roster.filterClass')}
+            label="Filter by class"
             value={classFilter}
             onChange={setClassFilter}
-            options={[{ value: 'all', label: t('common.all') }, ...classes.map((c) => ({ value: c.id, label: c.name }))]}
+            options={[{ value: 'all', label: 'All' }, ...classes.map((c) => ({ value: c.id, label: c.name }))]}
           />
         </div>
 
-        <div style={{ overflowX: 'auto', borderRadius: radii.md, border: `1px solid ${colors.border}` }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, minWidth: 820 }}>
+        <div className="overflow-x-auto rounded-md border border-line">
+          <table className="w-full min-w-[820px] border-collapse text-[13px]">
             <thead>
-              <tr style={{ background: colors.surfaceAlt }}>
-                {[t('roster.id'), t('common.name'), t('common.className'), t('statuses.enrolled'), t('roster.guardian'), t('roster.joined'), t('roster.attendanceRate'), t('roster.feeBalance'), t('roster.sponsor')].map((h) => (
-                  <th key={h} style={{ textAlign: 'left', padding: '10px 12px', fontSize: 11, fontWeight: 700, color: colors.muted, textTransform: 'uppercase', letterSpacing: '0.4px', whiteSpace: 'nowrap' }}>
+              <tr className="bg-surface-alt">
+                {['ID', 'Name', 'Class', 'Status', 'Guardian', 'Joined', 'Attendance', 'Fee Balance', 'Sponsorship'].map((h) => (
+                  <th key={h} className="px-3 py-2.5 text-left text-[11px] font-bold tracking-[0.4px] whitespace-nowrap text-muted uppercase">
                     {h}
                   </th>
                 ))}
-                <th style={{ width: 40 }} />
+                <th className="w-10" />
               </tr>
             </thead>
             <tbody>
@@ -190,73 +198,72 @@ export default function MonksRoster() {
                 <Fragment key={m.id}>
                   <tr
                     onClick={() => setExpandedId(expandedId === m.id ? null : m.id)}
-                    style={{
-                      borderTop: `1px solid ${colors.border}`,
-                      cursor: 'pointer',
-                      background: expandedId === m.id ? colors.primarySoft : colors.surface,
-                      transition: 'background .12s ease',
-                      ':hover': { background: expandedId === m.id ? colors.primarySoft : colors.surfaceAlt },
-                    }}
+                    className={cn(
+                      'cursor-pointer border-t border-line transition-colors',
+                      expandedId === m.id ? 'bg-pine-soft hover:bg-pine-soft' : 'bg-surface hover:bg-surface-alt',
+                    )}
                   >
-                    <td style={{ padding: '11px 12px', fontWeight: 700, color: colors.primary, whiteSpace: 'nowrap' }}>{m.id}</td>
-                    <td style={{ padding: '11px 12px', fontWeight: 600, color: colors.text, whiteSpace: 'nowrap' }}>
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{ width: 28, height: 28, borderRadius: '50%', background: colors.primarySoft, color: colors.primary, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 800 }}>
+                    <td className="px-3 py-2.5 font-bold whitespace-nowrap text-pine">{m.id}</td>
+                    <td className="px-3 py-2.5 font-semibold whitespace-nowrap text-ink">
+                      <span className="inline-flex items-center gap-2">
+                        <span className="inline-flex size-7 items-center justify-center rounded-full bg-pine-soft text-[10px] font-extrabold text-pine">
                           {m.name.split(' ').map((p) => p[0]).slice(0, 2).join('')}
                         </span>
                         {m.name}
                       </span>
                     </td>
-                    <td style={{ padding: '11px 12px', color: colors.textSoft }}>{classLabel(m.classId)}</td>
-                    <td style={{ padding: '11px 12px' }}>
+                    <td className="px-3 py-2.5 text-body">{classLabel(m.classId)}</td>
+                    <td className="px-3 py-2.5">
                       <Badge tone={statusTone(m.status)} dot>{t(`statuses.${m.status}`)}</Badge>
                     </td>
-                    <td style={{ padding: '11px 12px', color: colors.textSoft }}>{m.guardian}</td>
-                    <td style={{ padding: '11px 12px', color: colors.textSoft, whiteSpace: 'nowrap' }}>{m.joined}</td>
-                    <td style={{ padding: '11px 12px' }}>
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{ width: 46, fontSize: 12, fontWeight: 700, color: m.attendanceRate >= 90 ? colors.success : m.attendanceRate === 0 ? colors.muted : colors.warning }}>
+                    <td className="px-3 py-2.5 text-body">{m.guardian}</td>
+                    <td className="px-3 py-2.5 whitespace-nowrap text-body">{m.joined}</td>
+                    <td className="px-3 py-2.5">
+                      <span className="inline-flex items-center gap-2">
+                        <span className={cn('w-[46px] text-[12px] font-bold', m.attendanceRate >= 90 ? 'text-success' : m.attendanceRate === 0 ? 'text-muted' : 'text-warning')}>
                           {m.attendanceRate > 0 ? `${m.attendanceRate}%` : '—'}
                         </span>
                       </span>
                     </td>
-                    <td style={{ padding: '11px 12px', fontWeight: 700, color: m.feeBalance > 0 ? colors.danger : colors.success, whiteSpace: 'nowrap' }}>
+                    <td className={cn('px-3 py-2.5 font-bold whitespace-nowrap', m.feeBalance > 0 ? 'text-danger' : 'text-success')}>
                       {m.feeBalance > 0 ? `$${m.feeBalance}` : '✓'}
                     </td>
-                    <td style={{ padding: '11px 12px', color: colors.textSoft }}>{m.sponsor || t('roster.noSponsor')}</td>
-                    <td style={{ padding: '11px 12px' }}>
-                      <IconChevron size={16} color={colors.muted} style={{ transform: expandedId === m.id ? 'rotate(180deg)' : 'none', transition: 'transform .15s ease' }} />
+                    <td className="px-3 py-2.5 text-body">{m.sponsor || t('roster.noSponsor')}</td>
+                    <td className="px-3 py-2.5">
+                      <span className={cn('inline-flex transition-transform', expandedId === m.id && 'rotate-180')}>
+                        <IconChevron size={16} color={colors.muted} />
+                      </span>
                     </td>
                   </tr>
                   {expandedId === m.id && (
-                    <tr key={`${m.id}-detail`} style={{ background: colors.primarySoft }}>
-                      <td colSpan={10} style={{ padding: '18px 20px' }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14 }}>
+                    <tr key={`${m.id}-detail`} className="bg-pine-soft">
+                      <td colSpan={10} className="px-5 py-[18px]">
+                        <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3.5">
                           <div>
-                            <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color: colors.muted, textTransform: 'uppercase', letterSpacing: '0.4px' }}>{t('roster.profile')}</p>
-                            <p style={{ margin: '8px 0', fontSize: 13, color: colors.text }}><IconUser size={13} /> <b>{m.name}</b></p>
-                            <p style={{ margin: 0, fontSize: 12.5, color: colors.textSoft }}>{t('roster.id')}: {m.id} · {classLabel(m.classId)}</p>
+                            <p className="m-0 text-[11px] font-bold tracking-[0.4px] text-muted uppercase">{t('roster.profile')}</p>
+                            <p className="my-2 text-[13px] text-ink"><IconUser size={13} /> <b>{m.name}</b></p>
+                            <p className="m-0 text-[12.5px] text-body">{t('roster.id')}: {m.id} · {classLabel(m.classId)}</p>
                           </div>
                           <div>
-                            <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color: colors.muted, textTransform: 'uppercase', letterSpacing: '0.4px' }}>{t('roster.guardian')}</p>
-                            <p style={{ margin: '8px 0', fontSize: 13, color: colors.text }}>{m.guardian}</p>
-                            <p style={{ margin: 0, fontSize: 12.5, color: colors.textSoft }}>{t('roster.enrolledDate')}: {m.joined}</p>
+                            <p className="m-0 text-[11px] font-bold tracking-[0.4px] text-muted uppercase">{t('roster.guardian')}</p>
+                            <p className="my-2 text-[13px] text-ink">{m.guardian}</p>
+                            <p className="m-0 text-[12.5px] text-body">{t('roster.enrolledDate')}: {m.joined}</p>
                           </div>
                           <div>
-                            <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color: colors.muted, textTransform: 'uppercase', letterSpacing: '0.4px' }}>{t('roster.academic')}</p>
-                            <p style={{ margin: '8px 0 4px', fontSize: 12.5, color: colors.textSoft }}>{t('roster.avgAttendance')}: {m.attendanceRate > 0 ? `${m.attendanceRate}%` : '—'}</p>
-                            <ProgressBar value={m.attendanceRate} color={m.attendanceRate >= 90 ? colors.success : colors.warning} height={7} style={{ maxWidth: 160 }} />
+                            <p className="m-0 text-[11px] font-bold tracking-[0.4px] text-muted uppercase">{t('roster.academic')}</p>
+                            <p className="mt-2 mb-1 text-[12.5px] text-body">{t('roster.avgAttendance')}: {m.attendanceRate > 0 ? `${m.attendanceRate}%` : '—'}</p>
+                            <ProgressBar value={m.attendanceRate} color={m.attendanceRate >= 90 ? colors.success : colors.warning} height={7} className="max-w-40" />
                           </div>
                           <div>
-                            <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color: colors.muted, textTransform: 'uppercase', letterSpacing: '0.4px' }}>{t('roster.fees')}</p>
-                            <p style={{ margin: '8px 0', fontSize: 13, fontWeight: 700, color: m.feeBalance > 0 ? colors.danger : colors.success }}>
+                            <p className="m-0 text-[11px] font-bold tracking-[0.4px] text-muted uppercase">{t('roster.fees')}</p>
+                            <p className={cn('my-2 text-[13px] font-bold', m.feeBalance > 0 ? 'text-danger' : 'text-success')}>
                               {m.feeBalance > 0 ? `${t('roster.feeBalance')}: $${m.feeBalance}` : t('statuses.paid')}
                             </p>
-                            <p style={{ margin: 0, fontSize: 12.5, color: colors.textSoft }}>
+                            <p className="m-0 text-[12.5px] text-body">
                               <IconShield size={12} /> {t('roster.sponsor')}: {m.sponsor || t('roster.noSponsor')}
                             </p>
                           </div>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, justifyContent: 'center' }}>
+                          <div className="flex flex-col justify-center gap-2">
                             <Button size="sm" tone="success" icon={<IconMonks size={14} />}>{t('roster.recordAttendance')}</Button>
                             <Button size="sm" tone="outline" icon={<IconFees size={14} />}>{t('roster.recordFee')}</Button>
                           </div>
@@ -271,7 +278,7 @@ export default function MonksRoster() {
           {filtered.length === 0 && <EmptyState text={t('common.noResults')} />}
         </div>
 
-        <p style={{ margin: '12px 2px 0', fontSize: 12, color: colors.muted }}>{t('roster.expand')}</p>
+        <p className="mt-3 mx-0.5 mb-0 text-[12px] text-muted">{t('roster.expand')}</p>
       </Card>
     </div>
   )

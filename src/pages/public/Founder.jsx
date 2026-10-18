@@ -1,5 +1,5 @@
-import { useField, PageHero, Section, Tile } from './shared.jsx'
-import { colors } from '../../theme.js'
+import { useField, PageHero, Section } from './shared.jsx'
+import { CardBody, CardEyebrow, CardTitle, StatBand } from '../../components/cards.jsx'
 import { useLanguage } from '../../i18n.jsx'
 
 export default function Founder() {
@@ -11,53 +11,35 @@ export default function Founder() {
   const visionTitle = useField('founder', 'visionTitle')
   const visionBody = useField('founder', 'visionBody')
 
+  const facts = [
+    { value: '1964', label: t('settingsPage.established') },
+    { value: '142+', label: t('homePage.statMonks') },
+    { value: '7', label: t('classesPage.credits') },
+    { value: '3', label: t('settingsPage.defaultLang') },
+  ]
+
   return (
     <div>
       <PageHero title={name} subtitle={title} kicker={t('founderPage.title')} />
 
       <Section>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 22, alignItems: 'stretch' }}>
-          <Tile
-            style={{
-              minHeight: 320,
-              background: `linear-gradient(150deg, ${colors.primaryDark} 0%, ${colors.primary} 100%)`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: 'none',
-              flexDirection: 'column',
-              gap: 6,
-              color: '#fff',
-            }}
-          >
-            <span style={{ fontSize: 96, fontWeight: 900, opacity: 0.9 }}>ད</span>
-            <span style={{ fontSize: 16, fontWeight: 800 }}>{name}</span>
-            <span style={{ fontSize: 12, color: '#E5B98B' }}>{title}</span>
-          </Tile>
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-center gap-11">
+          <div className="flex min-h-[300px] flex-col items-center justify-center gap-1.5 rounded-lg bg-[linear-gradient(150deg,var(--color-ink)_0%,var(--color-pine)_100%)] p-7 text-center text-white">
+            <span className="text-[60px] leading-none opacity-[0.92]">☸</span>
+            <span className="font-heading text-[17px] font-bold">{name}</span>
+            <span className="text-xs text-sage-light">{title}</span>
+          </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <Tile>
-              <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: colors.text }}>{bioTitle}</h3>
-              <p style={{ margin: '10px 0 0', fontSize: 14, lineHeight: 1.7, color: colors.textSoft }}>{bioBody}</p>
-            </Tile>
+          <div>
+            <CardEyebrow>Life &amp; Service</CardEyebrow>
+            <CardTitle as="h3" className="mt-2.5 text-[20px]">{bioTitle}</CardTitle>
+            <CardBody className="mt-3 text-[14.5px]">{bioBody}</CardBody>
           </div>
         </div>
       </Section>
 
-      <Section title={visionTitle} subtitle={visionBody} style={{ background: colors.surfaceAlt, borderTop: `1px solid ${colors.border}` }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14 }}>
-          {[
-            { label: '1964', sub: t('settingsPage.established') },
-            { label: '142+', sub: t('homePage.statMonks') },
-            { label: '7', sub: t('classesPage.credits') },
-            { label: '3', sub: t('settingsPage.defaultLang') },
-          ].map((s) => (
-            <Tile key={s.label} style={{ textAlign: 'center', borderTop: `3px solid ${colors.primary}` }}>
-              <p style={{ margin: 0, fontSize: 26, fontWeight: 800, color: colors.text }}>{s.label}</p>
-              <p style={{ margin: '6px 0 0', fontSize: 12.5, color: colors.muted }}>{s.sub}</p>
-            </Tile>
-          ))}
-        </div>
+      <Section title={visionTitle} subtitle={visionBody} className="border-t border-line bg-surface-alt">
+        <StatBand stats={facts} className="mx-auto max-w-[860px]" />
       </Section>
     </div>
   )

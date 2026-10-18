@@ -1,5 +1,6 @@
-import { useField, PageHero, Section, Tile } from './shared.jsx'
-import { colors, radii } from '../../theme.js'
+import { useField, PageHero, Section } from './shared.jsx'
+import { CardBody, CardEyebrow, StatBand } from '../../components/cards.jsx'
+import { colors } from '../../theme.js'
 import { useLanguage } from '../../i18n.jsx'
 
 const milestones = [
@@ -32,33 +33,33 @@ export default function Tradition() {
       <PageHero title={introTitle} subtitle={introBody} kicker="Mahayana · Nalanda Lineage" />
 
       <Section title={historyTitle} subtitle={historyBody}>
-        <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 0, margin: '0 auto', maxWidth: 760 }}>
-          <span style={{ position: 'absolute', left: 61, top: 12, bottom: 12, width: 2, background: colors.border }} />
+        <div className="relative mx-auto flex max-w-[760px] flex-col">
+          <span aria-hidden="true" className="absolute top-4 bottom-4 left-[63px] w-px bg-line" />
           {milestones.map((m) => (
-            <div key={m.key} style={{ position: 'relative', display: 'flex', gap: 20, alignItems: 'center', padding: '10px 0' }}>
-              <span style={{ position: 'relative', zIndex: 1, minWidth: 64, textAlign: 'center', padding: '7px 8px', borderRadius: radii.md, background: colors.primarySoft, color: colors.primary, fontSize: 12.5, fontWeight: 800, whiteSpace: 'nowrap' }}>
+            <div key={m.key} className="relative flex items-center gap-5 py-[9px]">
+              <span className="relative z-[1] min-w-[66px] bg-mint px-2 py-[7px] text-center font-heading text-sm font-bold whitespace-nowrap text-sage">
                 {m.year}
               </span>
-              <Tile style={{ flex: 1, padding: 14 }}>
-                <p style={{ margin: 0, fontSize: 13.5, color: colors.textSoft, lineHeight: 1.55 }}>{translations[m.key]?.[lang] || translations[m.key]?.en || m.text}</p>
-              </Tile>
+              <div className="flex-1 border-b border-l border-line py-3.5 pl-[22px]">
+                <CardEyebrow color={colors.gold}>Milestone</CardEyebrow>
+                <CardBody className="mt-2">{translations[m.key]?.[lang] || translations[m.key]?.en || m.text}</CardBody>
+              </div>
             </div>
           ))}
         </div>
       </Section>
 
-      <Section title={philosophyTitle} subtitle={philosophyBody} style={{ background: colors.surfaceAlt, borderTop: `1px solid ${colors.border}` }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14 }}>
-          {[
-            { label: 'Śīla', sub: 'Discipline & Ethics' },
-            { label: 'Samādhi', sub: 'Meditation & Focus' },
-            { label: 'Prajñā', sub: 'Wisdom & Insight' },
-          ].map((t) => (
-            <Tile key={t.label} style={{ textAlign: 'center', borderTop: `3px solid ${colors.accent}` }}>
-              <p style={{ margin: 0, fontSize: 20, fontWeight: 800, color: colors.primary }}>{t.label}</p>
-              <p style={{ margin: '6px 0 0', fontSize: 12.5, color: colors.muted }}>{t.sub}</p>
-            </Tile>
-          ))}
+      <Section title={philosophyTitle} subtitle={philosophyBody} className="border-t border-line bg-surface-alt">
+        <div className="mx-auto max-w-[760px]">
+          <CardEyebrow>Three Trainings</CardEyebrow>
+          <StatBand
+            className="mt-[22px]"
+            stats={[
+              { value: 'Śīla', label: 'Discipline & Ethics', color: colors.primary },
+              { value: 'Samādhi', label: 'Meditation & Focus', color: colors.accent },
+              { value: 'Prajñā', label: 'Wisdom & Insight', color: colors.success },
+            ]}
+          />
         </div>
       </Section>
     </div>

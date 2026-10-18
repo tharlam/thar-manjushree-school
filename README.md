@@ -5,64 +5,41 @@ A React 19 + Vite application for Thar Manjushree School — a monastic school i
 ## Tech Stack
 
 - **Frontend:** React 19, Vite 8, React Router 7
-- **Backend:** Supabase (PostgreSQL + Auth + Storage)
-- **Payments:** Khalti (Nepal-focused payment gateway)
+- **Data storage:** Browser localStorage (no backend required)
 - **Deployment:** Vercel
+
+> Note: A `supabase/` folder (migrations + seed tooling) is kept in the repo for
+> reference/future use, but the app currently does not call it.
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js 18+
-- A Supabase project ([supabase.com](https://supabase.com))
-- Khalti merchant account (optional, for payments)
 
 ### Setup
 
 1. Clone the repository
-2. Copy `.env.example` to `.env` and fill in your credentials:
-   ```bash
-   cp .env.example .env
-   ```
-3. Install dependencies:
+2. Install dependencies:
    ```bash
    npm install
    ```
-4. Run the seed script to create the first admin user:
-   ```bash
-   node scripts/seed.mjs
-   ```
-5. Start the development server:
+3. Start the development server:
    ```bash
    npm run dev
    ```
+
+No environment variables are needed — all data is stored in the browser's
+localStorage. (Optional: `.env` variables are only used by `scripts/seed.mjs`
+to seed a Supabase project.)
 
 ### Environment Variables
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `VITE_SUPABASE_URL` | Supabase project URL | Yes |
-| `VITE_SUPABASE_ANON_KEY` | Supabase anonymous key | Yes |
-| `VITE_SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server only) | For seeding |
-| `VITE_KHALTI_PUBLIC_KEY` | Khalti public key | For payments |
-| `SEED_ADMIN_EMAIL` | Admin email for seeding | For seeding |
-| `SEED_ADMIN_PASSWORD` | Admin password for seeding | For seeding |
-
-### Supabase Setup
-
-1. Create a new Supabase project
-2. Run the migrations in order:
-   - `supabase/migrations/0001_init.sql`
-   - `supabase/migrations/0002_auth_hardening.sql`
-   - `supabase/migrations/0003_payments.sql`
-3. Deploy the Edge Function:
-   ```bash
-   supabase functions deploy verify-donation
-   ```
-4. Set the Khalti secret key:
-   ```bash
-   supabase secrets set KHALTI_SECRET_KEY=<your-khalti-secret>
-   ```
+| `VITE_SUPABASE_URL` | Supabase project URL | Only for seeding |
+| `VITE_SUPABASE_ANON_KEY` | Supabase anonymous key | Only for seeding |
+| `VITE_SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server only) | Only for seeding |
 
 ### Deployment
 
@@ -81,7 +58,7 @@ This project is configured for Vercel deployment:
 - Curriculum and Daily Schedule
 - Admissions application form
 - Gallery with category filtering
-- Donations with Khalti integration
+- Donations page with bank transfer details and manual donation instructions
 - Contact form
 
 ### Admin Dashboard
@@ -102,11 +79,11 @@ src/
 ├── components/     # Reusable UI components
 ├── data/           # Static data and seed data
 ├── layout/         # Layout components (Public, Admin)
-├── lib/            # Utility libraries (Supabase, payments)
+├── lib/            # Utility libraries (currency formatting)
 ├── pages/          # Page components
 │   ├── public/     # Public website pages
 │   └── *.jsx       # Admin dashboard pages
-├── store.jsx       # Global state management (Supabase)
+├── store.jsx       # Global state management (localStorage)
 ├── theme.js        # Design tokens and theme
 └── i18n.jsx        # Internationalization (en/ne/bo)
 ```

@@ -17,14 +17,14 @@ export class ErrorBoundary extends Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f7f4ee', fontFamily: 'Inter, sans-serif' }}>
-          <div style={{ textAlign: 'center', padding: 40 }}>
-            <h1 style={{ fontSize: 48, color: '#8C1F28' }}>⚠</h1>
-            <h2 style={{ fontSize: 20, color: '#1b1b1f', marginTop: 16 }}>Something went wrong</h2>
-            <p style={{ color: '#6b6b7b', marginTop: 8 }}>{this.state.error?.message || 'An unexpected error occurred.'}</p>
+        <div className="flex min-h-screen items-center justify-center bg-mint font-sans">
+          <div className="p-10 text-center">
+            <h1 className="text-5xl text-danger">!</h1>
+            <h2 className="mt-4 text-xl text-ink">Something went wrong</h2>
+            <p className="mt-2 text-muted">{this.state.error?.message || 'An unexpected error occurred.'}</p>
             <button
               onClick={() => this.setState({ hasError: false, error: null })}
-              style={{ marginTop: 24, padding: '10px 24px', background: '#8C1F28', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14 }}
+              className="mt-6 cursor-pointer rounded-md border-none bg-danger px-6 py-2.5 text-sm text-white"
             >
               Try Again
             </button>

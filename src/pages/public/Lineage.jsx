@@ -1,5 +1,6 @@
-import { useField, PageHero, Section, Tile } from './shared.jsx'
-import { colors, radii } from '../../theme.js'
+import { useField, PageHero, Section } from './shared.jsx'
+import { RailCard } from '../../components/cards.jsx'
+import { colors } from '../../theme.js'
 import { useLanguage } from '../../i18n.jsx'
 import { classes } from '../../data/index.js'
 
@@ -25,37 +26,43 @@ export default function Lineage() {
       <PageHero title={introTitle} subtitle={introBody} kicker={t('lineagePage.title')} />
 
       <Section>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 0, maxWidth: 640, margin: '0 auto' }}>
+        <div className="mx-auto flex max-w-[640px] flex-col">
           {lineageSteps.map((s, i) => (
-            <div key={s.label} style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <span style={{ width: 34, height: 34, borderRadius: '50%', background: s.color, color: '#fff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800 }}>
+            <div key={s.label} className="flex items-center gap-4">
+              <div className="flex flex-col items-center">
+                <span
+                  className="inline-flex size-[34px] items-center justify-center rounded-full text-[13px] font-extrabold text-white"
+                  style={{ background: s.color }}
+                >
                   {i + 1}
                 </span>
-                {i < lineageSteps.length - 1 && <span style={{ width: 2, flex: 1, minHeight: 26, background: colors.border }} />}
+                {i < lineageSteps.length - 1 && <span className="min-h-[26px] w-0.5 flex-1 bg-line" />}
               </div>
-              <div style={{ flex: 1, padding: '8px 0' }}>
-                <p style={{ margin: 0, fontSize: 15, fontWeight: 800, color: colors.text }}>{s.label}</p>
-                <p style={{ margin: '2px 0 0', fontSize: 12.5, color: colors.muted }}>{s.sub}</p>
+              <div className="flex-1 py-2">
+                <p className="m-0 text-[15px] font-extrabold text-ink">{s.label}</p>
+                <p className="mt-0.5 mb-0 text-[12.5px] text-muted">{s.sub}</p>
               </div>
             </div>
           ))}
         </div>
       </Section>
 
-      <Section title={mastersTitle} subtitle={mastersBody} style={{ background: colors.surfaceAlt, borderTop: `1px solid ${colors.border}` }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 14 }}>
+      <Section title={mastersTitle} subtitle={mastersBody} className="border-t border-line bg-surface-alt">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-x-[34px] gap-y-[18px]">
           {masters.map((c) => (
-            <Tile key={c.teacher} style={{ display: 'flex', alignItems: 'center', gap: 12, borderLeft: `4px solid ${c.color}` }}>
-              <span style={{ width: 44, height: 44, borderRadius: '50%', background: `${c.color}1A`, color: c.color, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 800 }}>
+            <RailCard key={c.teacher} accent={c.color} className="flex-row items-center gap-3 py-3.5 pr-4.5 pl-6">
+              <span
+                className="inline-flex size-11 items-center justify-center rounded-full text-xs font-extrabold"
+                style={{ background: `${c.color}1A`, color: c.color }}
+              >
                 {c.teacher.split(' ').map((p) => p[0]).slice(0, 2).join('')}
               </span>
-              <div style={{ flex: 1 }}>
-                <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: colors.text }}>{c.teacher}</p>
-                <p style={{ margin: '3px 0 0', fontSize: 12, color: colors.muted }}>{c.name} · {c.room}</p>
+              <div className="flex-1">
+                <p className="m-0 text-sm font-bold text-ink">{c.teacher}</p>
+                <p className="mt-[3px] mb-0 text-xs text-muted">{c.name} · {c.room}</p>
               </div>
-              <span style={{ padding: '2px 9px', borderRadius: radii.round, background: colors.primarySoft, color: colors.primary, fontSize: 10.5, fontWeight: 700, whiteSpace: 'nowrap' }}>{t('statuses.active')}</span>
-            </Tile>
+              <span className="rounded-full bg-pine-soft px-[9px] py-0.5 text-[10.5px] font-bold whitespace-nowrap text-pine">{t('statuses.active')}</span>
+            </RailCard>
           ))}
         </div>
       </Section>

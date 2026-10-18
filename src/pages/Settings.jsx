@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useLanguage } from '../i18n.jsx'
-import { colors, radii } from '../theme.js'
 import { Card, CardHeader, Button, Input, Select, Toggle, Toast, PageHeader } from '../components/ui.jsx'
 import { IconEdit, IconTrash, IconDownload } from '../components/icons.jsx'
 import { adminProfiles } from '../data/index.js'
@@ -53,63 +52,66 @@ export default function Settings() {
     URL.revokeObjectURL(url)
   }
 
-  const inputRow = { display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 12 }
+  const inputRow = 'mb-3 flex flex-wrap gap-3'
 
   return (
     <div>
       <PageHeader title={t('settingsPage.title')} subtitle={t('settingsPage.subtitle')} />
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 16, marginBottom: 16 }}>
+      <div className="dashboard-grid-2col mb-4 grid grid-cols-[1.4fr_1fr] gap-4">
         <Card pad={18}>
           <CardHeader title={t('settingsPage.schoolInfo')} />
-          <div style={inputRow}>
-            <Input label={t('settingsPage.schoolName')} value={school.name} onChange={set('name')} style={{ flex: 2 }} />
-            <Input label={t('settingsPage.established')} value={school.established} onChange={set('established')} style={{ flex: 1 }} />
+          <div className={inputRow}>
+            <Input label={t('settingsPage.schoolName')} value={school.name} onChange={set('name')} className="flex-[2]" />
+            <Input label={t('settingsPage.established')} value={school.established} onChange={set('established')} />
           </div>
-          <div style={inputRow}>
-            <Input label={t('settingsPage.address')} value={school.address} onChange={set('address')} style={{ flex: 3 }} />
+          <div className={inputRow}>
+            <Input label={t('settingsPage.address')} value={school.address} onChange={set('address')} className="flex-[3]" />
           </div>
-          <div style={inputRow}>
-            <Input label={t('settingsPage.phone')} value={school.phone} onChange={set('phone')} style={{ flex: 1 }} />
-            <Input label={t('settingsPage.email')} value={school.email} onChange={set('email')} style={{ flex: 1.2 }} />
+          <div className={inputRow}>
+            <Input label={t('settingsPage.phone')} value={school.phone} onChange={set('phone')} />
+            <Input label={t('settingsPage.email')} value={school.email} onChange={set('email')} className="flex-[1.2]" />
           </div>
-          <div style={inputRow}>
-            <Input label={t('settingsPage.principal')} value={school.principal} onChange={set('principal')} style={{ flex: 1 }} />
-            <Input label={t('settingsPage.motto')} value={school.motto} onChange={set('motto')} style={{ flex: 1.4 }} />
+          <div className={inputRow}>
+            <Input label={t('settingsPage.principal')} value={school.principal} onChange={set('principal')} />
+            <Input label={t('settingsPage.motto')} value={school.motto} onChange={set('motto')} className="flex-[1.4]" />
           </div>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 4 }}>
+          <div className="mt-1 flex justify-end">
             <Button onClick={showToast}>{t('common.save')}</Button>
           </div>
         </Card>
 
         <Card pad={18}>
           <CardHeader title={t('settingsPage.profileTitle')} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-              <span style={{ width: 56, height: 56, borderRadius: '50%', background: `linear-gradient(135deg, ${colors.primary}, ${colors.primaryDark})`, color: '#fff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 800 }}>
+          <div className="flex flex-col gap-3.5">
+            <div className="flex items-center gap-3.5">
+              <span className="inline-flex size-14 items-center justify-center rounded-full bg-linear-to-br from-pine to-ink text-[18px] font-extrabold text-white">
                 TN
               </span>
               <div>
-                <p style={{ margin: 0, fontSize: 15, fontWeight: 800, color: colors.text }}>{t('app.profileName')}</p>
-                <p style={{ margin: '3px 0 0', fontSize: 12.5, color: colors.muted }}>{t('app.profileRole')}</p>
+                <p className="m-0 text-[15px] font-extrabold text-ink">{t('app.profileName')}</p>
+                <p className="mt-[3px] mb-0 text-[12.5px] text-muted">{t('app.profileRole')}</p>
               </div>
             </div>
-            <div style={{ display: 'flex', gap: 8 }}>
+            <div className="flex gap-2">
               <Button size="sm" icon={<IconEdit size={14} />} onClick={showToast}>{t('settingsPage.editProfile')}</Button>
               <Button size="sm" tone="outline" icon={<IconDownload size={14} />} onClick={exportCsv}>{t('settingsPage.exportData')}</Button>
             </div>
-            <div style={{ borderTop: `1px solid ${colors.border}`, paddingTop: 12 }}>
-              <p style={{ margin: '0 0 8px', fontSize: 12, fontWeight: 700, color: colors.textSoft }}>{t('settingsPage.adminProfiles')}</p>
+            <div className="border-t border-line pt-3">
+              <p className="mt-0 mb-2 text-[12px] font-bold text-body">{t('settingsPage.adminProfiles')}</p>
               {adminProfiles.map((a) => (
-                <div key={a.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', borderBottom: `1px solid ${colors.border}` }}>
-                  <span style={{ width: 30, height: 30, borderRadius: '50%', background: `${a.color}1A`, color: a.color, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800 }}>
+                <div key={a.id} className="flex items-center gap-2.5 border-b border-line py-2">
+                  <span
+                    className="inline-flex size-[30px] items-center justify-center rounded-full text-[11px] font-extrabold"
+                    style={{ background: `${a.color}1A`, color: a.color }}
+                  >
                     {a.name.split(' ').map((p) => p[0]).slice(0, 2).join('')}
                   </span>
-                  <div style={{ flex: 1 }}>
-                    <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: colors.text }}>{a.name}</p>
-                    <p style={{ margin: 0, fontSize: 11.5, color: colors.muted }}>{t(`settingsPage.${a.roleKey}`)}</p>
+                  <div className="flex-1">
+                    <p className="m-0 text-[13px] font-bold text-ink">{a.name}</p>
+                    <p className="m-0 text-[11.5px] text-muted">{t(`settingsPage.${a.roleKey}`)}</p>
                   </div>
-                  <span style={{ fontSize: 11, color: colors.muted, whiteSpace: 'nowrap' }}>{a.lastActive}</span>
+                  <span className="text-[11px] whitespace-nowrap text-muted">{a.lastActive}</span>
                 </div>
               ))}
             </div>
@@ -117,10 +119,10 @@ export default function Settings() {
         </Card>
       </div>
 
-      <Card pad={18} style={{ marginBottom: 16 }}>
+      <Card pad={18} className="mb-4">
         <CardHeader title={t('settingsPage.preferences')} />
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 14 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-3.5">
+          <div className="flex flex-col gap-3">
             <Select
               label={t('settingsPage.defaultLang')}
               value={prefs.defaultLang}
@@ -135,7 +137,7 @@ export default function Settings() {
             />
             <Input label={t('settingsPage.academicYear')} value={prefs.academicYear} onChange={setP('academicYear')} />
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div className="flex flex-col gap-2.5">
             <Toggle checked={prefs.notifyEnrollment} onChange={setP('notifyEnrollment')} label={t('settingsPage.notifyEnrollment')} />
             <Toggle checked={prefs.notifyAttendance} onChange={setP('notifyAttendance')} label={t('settingsPage.notifyAttendance')} />
             <Toggle checked={prefs.notifyFees} onChange={setP('notifyFees')} label={t('settingsPage.notifyFees')} />
@@ -144,14 +146,14 @@ export default function Settings() {
             <Toggle checked={prefs.backup} onChange={setP('backup')} label={t('settingsPage.backup')} />
           </div>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 14 }}>
+        <div className="mt-3.5 flex justify-end">
           <Button onClick={showToast}>{t('common.save')}</Button>
         </div>
       </Card>
 
-      <Card pad={18} style={{ border: `1px solid ${colors.danger}44`, background: '#FDF6F5' }}>
+      <Card pad={18} className="border-danger/25 bg-[#FDF6F5]">
         <CardHeader title={t('settingsPage.dangerZone')} />
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+        <div className="flex flex-wrap gap-3">
           <Button tone="danger" icon={<IconTrash size={15} />} onClick={() => setConfirmReset(true)}>
             {t('settingsPage.resetData')}
           </Button>
@@ -164,10 +166,10 @@ export default function Settings() {
       {toast && <Toast message={toast} onClose={() => setToast(null)} />}
 
       {confirmReset && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(36,33,28,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-          <div style={{ width: '100%', maxWidth: 380, background: colors.surface, borderRadius: radii.lg, boxShadow: '0 20px 60px rgba(0,0,0,0.3)', padding: 22 }}>
-            <p style={{ margin: 0, fontSize: 15, fontWeight: 800, color: colors.text }}>{t('settingsPage.confirmReset')}</p>
-            <div style={{ display: 'flex', gap: 10, marginTop: 18, justifyContent: 'flex-end' }}>
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-[#24211C]/45 p-5">
+          <div className="w-full max-w-[380px] rounded-lg bg-surface p-[22px] shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
+            <p className="m-0 text-[15px] font-extrabold text-ink">{t('settingsPage.confirmReset')}</p>
+            <div className="mt-4.5 flex justify-end gap-2.5">
               <Button tone="outline" onClick={() => setConfirmReset(false)}>{t('common.cancel')}</Button>
               <Button tone="danger" onClick={() => { setConfirmReset(false); showToast() }}>{t('common.reset')}</Button>
             </div>

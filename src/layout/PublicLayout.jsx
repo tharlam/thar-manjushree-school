@@ -1,19 +1,51 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useLanguage } from '../i18n.jsx'
-import { colors, font, radii, shadows } from '../theme.js'
+import { cn } from '../lib/cn.js'
+import { IconChevron, IconX } from '../components/icons.jsx'
 
 const navItems = [
   { path: '/', key: 'site.nav.home', end: true },
-  { path: '/tradition', key: 'site.nav.tradition' },
-  { path: '/founder', key: 'site.nav.founder' },
-  { path: '/lineage', key: 'site.nav.lineage' },
-  { path: '/curriculum', key: 'site.nav.curriculum' },
-  { path: '/schedule', key: 'site.nav.schedule' },
+  { path: '/about', key: 'site.nav.about' },
+  { path: '/programs', key: 'site.nav.programs' },
+  { path: '/houses', key: 'site.nav.houses' },
+  { path: '/teachers', key: 'site.nav.teachers' },
   { path: '/admissions', key: 'site.nav.admissions' },
+  { path: '/events', key: 'site.nav.events' },
   { path: '/gallery', key: 'site.nav.gallery' },
-  { path: '/donations', key: 'site.nav.donations' },
+  { path: '/donate', key: 'site.nav.donations' },
   { path: '/contact', key: 'site.nav.contact' },
+]
+
+const topNav = [
+  { type: 'link', path: '/', key: 'site.nav.home', end: true },
+  {
+    type: 'dropdown',
+    labelKey: 'site.nav.about',
+    children: [
+      { path: '/about', key: 'site.nav.about' },
+      { path: '/houses', key: 'site.nav.houses' },
+      { path: '/teachers', key: 'site.nav.teachers' },
+    ],
+  },
+  {
+    type: 'dropdown',
+    labelKey: 'site.nav.programs',
+    children: [
+      { path: '/programs', key: 'site.nav.programs' },
+      { path: '/events', key: 'site.nav.events' },
+    ],
+  },
+  { type: 'link', path: '/admissions', key: 'site.nav.admissions' },
+  { type: 'link', path: '/gallery', key: 'site.nav.gallery' },
+  {
+    type: 'dropdown',
+    labelKey: 'site.nav.donations',
+    children: [
+      { path: '/donate', key: 'site.nav.donations' },
+      { path: '/contact', key: 'site.nav.contact' },
+    ],
+  },
 ]
 
 const langMeta = {
@@ -38,48 +70,20 @@ export function LanguageSelector({ compact }) {
   const current = langMeta[lang] || langMeta.en
 
   return (
-    <div ref={ref} style={{ position: 'relative' }}>
+    <div ref={ref} className="relative">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-label={t('header.language')}
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 8,
-          padding: '8px 12px',
-          borderRadius: radii.md,
-          border: `1px solid ${colors.border}`,
-          background: colors.surface,
-          color: colors.text,
-          fontFamily: font.sans,
-          fontSize: 13,
-          fontWeight: 600,
-          cursor: 'pointer',
-          transition: 'border-color .15s ease',
-        }}
+        className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-line bg-surface px-3 py-2 text-[13px] font-semibold font-sans text-ink transition-[border-color] hover:border-sage"
       >
-        <span style={{ color: colors.textSoft, fontWeight: 700 }}>{current.flag}</span>
-        {!compact && <span style={{ color: colors.text }}>{current.label}</span>}
-        <span style={{ fontSize: 10, color: colors.muted }}>▼</span>
+        <span className="font-bold text-body">{current.flag}</span>
+        {!compact && <span className="text-ink">{current.label}</span>}
+        <IconChevron size={12} className="text-muted" />
       </button>
       {open && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 'calc(100% + 8px)',
-            right: 0,
-            zIndex: 60,
-            minWidth: 190,
-            background: colors.surface,
-            border: `1px solid ${colors.border}`,
-            borderRadius: radii.lg,
-            boxShadow: shadows.pop,
-            padding: 6,
-            animation: 'fadeUp .15s ease',
-          }}
-        >
-          <p style={{ margin: '6px 10px', fontSize: 11, fontWeight: 700, color: colors.muted, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+        <div className="absolute top-[calc(100%+8px)] right-0 z-[60] min-w-[190px] rounded-lg border border-line bg-surface p-1.5 shadow-pop animate-fade-up">
+          <p className="mx-2.5 my-1.5 text-[11px] font-bold tracking-[0.5px] text-muted uppercase">
             {t('header.language')}
           </p>
           {['en', 'ne', 'bo'].map((code) => (
@@ -90,29 +94,18 @@ export function LanguageSelector({ compact }) {
                 setLang(code)
                 setOpen(false)
               }}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                width: '100%',
-                padding: '8px 10px',
-                borderRadius: radii.sm,
-                background: lang === code ? colors.primarySoft : 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                color: colors.text,
-                fontFamily: font.sans,
-                fontSize: 13,
-                fontWeight: lang === code ? 700 : 500,
-              }}
+              className={cn(
+                'flex w-full cursor-pointer items-center justify-between rounded-sm border-none px-2.5 py-2 text-[13px] font-sans text-ink',
+                lang === code ? 'bg-pine-soft font-bold' : 'bg-transparent font-medium',
+              )}
             >
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ display: 'inline-flex', width: 24, height: 24, borderRadius: '50%', background: colors.bg, alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700 }}>
+              <span className="inline-flex items-center gap-2.5">
+                <span className="inline-flex size-6 items-center justify-center rounded-full bg-surface-alt text-[11px] font-bold">
                   {langMeta[code].flag}
                 </span>
                 {langMeta[code].label}
               </span>
-              {lang === code && <span style={{ color: colors.primary, fontSize: 12, fontWeight: 800 }}>●</span>}
+              {lang === code && <span className="inline-flex size-1.5 rounded-full bg-pine" />}
             </button>
           ))}
         </div>
@@ -121,39 +114,100 @@ export function LanguageSelector({ compact }) {
   )
 }
 
+function DesktopNav() {
+  const { t } = useLanguage()
+  const [open, setOpen] = useState(null)
+  const rootRef = useRef(null)
+
+  useEffect(() => {
+    const onClick = (e) => {
+      if (rootRef.current && !rootRef.current.contains(e.target)) setOpen(null)
+    }
+    document.addEventListener('mousedown', onClick)
+    return () => document.removeEventListener('mousedown', onClick)
+  }, [])
+
+  const linkClass = ({ isActive }) =>
+    cn(
+      'inline-flex cursor-pointer items-center gap-1.5 rounded-full px-[13px] py-2 text-[13px] whitespace-nowrap no-underline transition-[background,color]',
+      isActive
+        ? 'bg-pine-soft font-bold text-pine ring-1 ring-pine/15'
+        : 'bg-transparent font-medium text-body hover:bg-pine-soft/60 hover:text-pine',
+    )
+
+  return (
+    <nav ref={rootRef} className="flex flex-1 items-center justify-center gap-0.5">
+      {topNav.map((item) => {
+        if (item.type === 'link') {
+          return (
+            <NavLink key={item.path} to={item.path} end={item.end} className={linkClass}>
+              {t(item.key)}
+            </NavLink>
+          )
+        }
+        const isOpen = open === item.labelKey
+        return (
+          <div key={item.labelKey} className="relative">
+            <button
+              type="button"
+              onClick={() => setOpen(isOpen ? null : item.labelKey)}
+              aria-expanded={isOpen}
+              className={cn(
+                'inline-flex cursor-pointer items-center gap-1.5 rounded-full border-none px-[13px] py-2 text-[13px] font-sans whitespace-nowrap transition-[background,color]',
+                isOpen
+                  ? 'bg-pine-soft font-bold text-pine ring-1 ring-pine/15'
+                  : 'bg-transparent font-medium text-body hover:bg-pine-soft/60 hover:text-pine',
+              )}
+            >
+              {t(item.labelKey)}
+              <IconChevron size={12} className={cn('transition-transform duration-150', isOpen && 'rotate-180')} />
+            </button>
+            {isOpen && (
+              <div className="absolute top-[calc(100%+8px)] left-0 z-[60] min-w-[210px] rounded-lg border border-line bg-surface p-1.5 shadow-pop animate-fade-up">
+                {item.children.map((child) => (
+                  <NavLink
+                    key={child.path}
+                    to={child.path}
+                    onClick={() => setOpen(null)}
+                    className={({ isActive }) =>
+                      cn(
+                        'flex items-center rounded-sm px-3 py-2.5 text-[13px] whitespace-nowrap no-underline',
+                        isActive ? 'bg-pine-soft font-bold text-pine' : 'bg-transparent font-medium text-ink hover:bg-pine-soft/60',
+                      )
+                    }
+                  >
+                    <span className="mr-2 size-1.5 shrink-0 rounded-full bg-line" />
+                    {t(child.key)}
+                  </NavLink>
+                ))}
+              </div>
+            )}
+          </div>
+        )
+      })}
+    </nav>
+  )
+}
+
 function MobileNav({ open, onClose }) {
   const { t } = useLanguage()
   return (
     <>
       {open && (
-        <div
-          onClick={onClose}
-          style={{ position: 'fixed', inset: 0, zIndex: 70, background: 'rgba(36,33,28,0.5)', display: 'flex', justifyContent: 'flex-end' }}
-        >
+        <div onClick={onClose} className="fixed inset-0 z-[70] flex justify-end bg-ink/50">
           <div
             onClick={(e) => e.stopPropagation()}
-            style={{
-              width: 'min(320px, 85vw)',
-              height: '100%',
-              background: colors.surface,
-              boxShadow: shadows.pop,
-              padding: '20px 18px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 4,
-              overflowY: 'auto',
-              animation: 'slideInRight .2s ease',
-            }}
+            className="flex h-full w-[min(320px,85vw)] flex-col gap-1 overflow-y-auto bg-surface p-5 px-[18px] shadow-pop animate-slide-in-right"
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-              <span style={{ fontSize: 15, fontWeight: 800, color: colors.text }}>{t('site.menu')}</span>
+            <div className="mb-2.5 flex items-center justify-between">
+              <span className="text-[15px] font-extrabold text-ink">{t('site.menu')}</span>
               <button
                 type="button"
                 onClick={onClose}
                 aria-label="Close menu"
-                style={{ width: 34, height: 34, borderRadius: radii.md, border: `1px solid ${colors.border}`, background: colors.surface, color: colors.textSoft, cursor: 'pointer', fontSize: 15 }}
+                className="flex size-[34px] cursor-pointer items-center justify-center rounded-md border border-line bg-surface text-body"
               >
-                ✕
+                <IconX size={16} />
               </button>
             </div>
             {navItems.map((item) => (
@@ -162,22 +216,19 @@ function MobileNav({ open, onClose }) {
                 to={item.path}
                 end={item.end}
                 onClick={onClose}
-                style={({ isActive }) => ({
-                  padding: '11px 12px',
-                  borderRadius: radii.md,
-                  textDecoration: 'none',
-                  fontSize: 14,
-                  fontWeight: isActive ? 700 : 500,
-                  color: isActive ? colors.primary : colors.text,
-                  background: isActive ? colors.primarySoft : 'transparent',
-                })}
+                className={({ isActive }) =>
+                  cn(
+                    'rounded-md px-3 py-[11px] text-sm no-underline',
+                    isActive ? 'bg-pine-soft font-bold text-pine' : 'bg-transparent font-medium text-ink',
+                  )
+                }
               >
                 {t(item.key)}
               </NavLink>
             ))}
-            <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div className="mt-3.5 flex items-center justify-between">
               <LanguageSelector compact />
-              <Link to="/admin" onClick={onClose} style={{ fontSize: 13, fontWeight: 700, color: colors.accent, textDecoration: 'none' }}>
+              <Link to="/admin" onClick={onClose} className="text-[13px] font-bold text-sage no-underline">
                 {t('site.staffLogin')} →
               </Link>
             </div>
@@ -185,6 +236,52 @@ function MobileNav({ open, onClose }) {
         </div>
       )}
     </>
+  )
+}
+
+const LOGO_CANDIDATES = ['/images/logo.svg', '/images/logo.png', '/images/logo.webp']
+const BRAND_ABBR = 'TMS'
+const BRAND_FULL = 'Tharlam Manjushree School'
+
+export function Brand({ size = 44, showText = false }) {
+  const [candidate, setCandidate] = useState(0)
+  const [missing, setMissing] = useState(false)
+  const src = LOGO_CANDIDATES[candidate]
+
+  return (
+    <Link
+      to="/"
+      aria-label={BRAND_FULL}
+      title={BRAND_FULL}
+      className="inline-flex shrink-0 items-center gap-[11px] no-underline"
+    >
+      <span
+        className="inline-flex shrink-0 items-center justify-center overflow-hidden border border-sage/50 bg-linear-to-br from-ink to-pine shadow-[0_4px_14px_rgba(15,42,42,0.18)]"
+        style={{ width: size, height: size, borderRadius: Math.round(size * 0.3) }}
+      >
+        {!missing && src ? (
+          <img
+            src={src}
+            alt=""
+            onError={() => {
+              if (candidate < LOGO_CANDIDATES.length - 1) setCandidate(candidate + 1)
+              else setMissing(true)
+            }}
+            className="block h-full w-full object-contain"
+          />
+        ) : (
+          <span
+            className="font-heading font-bold tracking-[0.5px] text-sage-light"
+            style={{ fontSize: Math.round(size * 0.34), lineHeight: 1 }}
+          >
+            {BRAND_ABBR}
+          </span>
+        )}
+      </span>
+      {showText && (
+        <span className="block font-heading text-base font-bold tracking-[0.4px] text-ink">{BRAND_ABBR}</span>
+      )}
+    </Link>
   )
 }
 
@@ -205,109 +302,40 @@ export default function PublicLayout() {
     window.scrollTo({ top: 0 })
   }, [location.pathname, lang])
 
-  const brand = (
-    <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 11, textDecoration: 'none' }}>
-      <span
-        style={{
-          width: 42,
-          height: 42,
-          borderRadius: radii.lg,
-          background: `linear-gradient(135deg, ${colors.accent}, #C7701F)`,
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: 20,
-          fontWeight: 800,
-          color: '#fff',
-          flexShrink: 0,
-        }}
-      >
-        ད
-      </span>
-      <span style={{ lineHeight: 1.2 }}>
-        <span style={{ display: 'block', fontSize: 15, fontWeight: 800, color: colors.text }}>Thar Manjushree</span>
-        <span style={{ display: 'block', fontSize: 11.5, color: colors.muted, fontWeight: 600 }}>{t('site.brandLine')}</span>
-      </span>
-    </Link>
-  )
+  const brand = <Brand />
 
   return (
-    <div style={{ minHeight: '100vh', background: colors.bg, fontFamily: font.sans, display: 'flex', flexDirection: 'column' }}>
-      <header
-        style={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 50,
-          background: 'rgba(255,255,255,0.94)',
-          backdropFilter: 'blur(8px)',
-          borderBottom: `1px solid ${colors.border}`,
-        }}
-      >
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 14 }}>
+    <div className="flex min-h-screen flex-col bg-mint font-sans">
+      <header className="sticky top-0 z-50 border-b border-line bg-white/92 shadow-[0_2px_18px_rgba(15,42,42,0.06)] backdrop-blur-[10px]">
+        <div className="h-[3px] bg-linear-to-r from-sage via-sage-light to-sage" />
+        <div className="mx-auto flex max-w-[1240px] items-center gap-3.5 px-[22px] py-2.5">
           {brand}
           {isMobile ? (
-            <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div className="ml-auto flex items-center gap-2.5">
               <LanguageSelector compact />
               <button
                 type="button"
                 onClick={() => setMenuOpen(true)}
                 aria-label={t('site.menu')}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  padding: '8px 12px',
-                  borderRadius: radii.md,
-                  border: `1px solid ${colors.border}`,
-                  background: colors.surface,
-                  color: colors.text,
-                  fontSize: 13,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  fontFamily: font.sans,
-                }}
+                className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-line bg-surface px-3 py-2 text-[13px] font-semibold font-sans text-ink"
               >
-                <span style={{ fontSize: 15, lineHeight: 1 }}>☰</span>
                 {t('site.menu')}
               </button>
             </div>
           ) : (
             <>
-              <nav style={{ flex: 1, display: 'flex', justifyContent: 'center', overflowX: 'auto', gap: 2 }}>
-                {navItems.map((item) => (
-                  <NavLink
-                    key={item.path}
-                    to={item.path}
-                    end={item.end}
-                    style={({ isActive }) => ({
-                      padding: '8px 10px',
-                      borderRadius: radii.md,
-                      textDecoration: 'none',
-                      fontSize: 13,
-                      fontWeight: isActive ? 700 : 500,
-                      color: isActive ? colors.primary : colors.textSoft,
-                      background: isActive ? colors.primarySoft : 'transparent',
-                      whiteSpace: 'nowrap',
-                    })}
-                  >
-                    {t(item.key)}
-                  </NavLink>
-                ))}
-              </nav>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <DesktopNav />
+              <div className="flex items-center gap-2.5">
                 <LanguageSelector />
                 <Link
+                  to="/donate"
+                  className="rounded-full bg-linear-to-br from-sage to-sage-light px-[18px] py-[9px] text-[12.5px] font-extrabold whitespace-nowrap text-ink no-underline shadow-sage"
+                >
+                  {t('site.donateNow')}
+                </Link>
+                <Link
                   to="/admin"
-                  style={{
-                    padding: '8px 14px',
-                    borderRadius: radii.md,
-                    background: colors.primary,
-                    color: '#fff',
-                    fontSize: 12.5,
-                    fontWeight: 700,
-                    textDecoration: 'none',
-                    whiteSpace: 'nowrap',
-                  }}
+                  className="rounded-full border border-line bg-surface px-3.5 py-2 text-[12.5px] font-bold whitespace-nowrap text-body no-underline"
                 >
                   {t('site.staffLogin')}
                 </Link>
@@ -317,27 +345,28 @@ export default function PublicLayout() {
         </div>
       </header>
 
-      <main style={{ flex: 1 }}>
+      <main className="flex-1">
         <Outlet />
       </main>
 
-      <footer style={{ background: `linear-gradient(180deg, ${colors.sidebar} 0%, ${colors.primaryDark} 100%)`, color: '#F6E8D8', marginTop: 0 }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '44px 20px 20px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 28 }}>
+      <footer className="bg-ink text-[#EAF6EE]">
+        <div className="mx-auto grid max-w-[1240px] grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-7 px-[22px] pt-12 pb-5">
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 14 }}>
-              <span style={{ width: 40, height: 40, borderRadius: radii.lg, background: `linear-gradient(135deg, ${colors.accent}, #C7701F)`, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 800, color: '#fff' }}>
-                ད
-              </span>
-              <span style={{ fontSize: 15, fontWeight: 800, color: '#fff' }}>Thar Manjushree School</span>
+            <div className="mb-3.5 flex items-center gap-[11px]">
+              <span className="text-[15px] font-bold text-white">Thar Manjushree School</span>
             </div>
-            <p style={{ margin: 0, fontSize: 13, lineHeight: 1.6, color: 'rgba(246,232,216,0.75)' }}>{t('site.footer.about')}</p>
+            <p className="m-0 text-[13px] leading-[1.7] text-[#EAF6EE]/70">{t('site.footer.about')}</p>
           </div>
 
           <div>
-            <p style={{ margin: '0 0 12px', fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#E5B98B' }}>{t('site.footer.linksTitle')}</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+            <p className="mt-0 mb-3 text-xs font-bold tracking-[1.4px] text-sage-light uppercase">{t('site.footer.linksTitle')}</p>
+            <div className="flex flex-col gap-2">
               {navItems.map((item) => (
-                <Link key={item.path} to={item.path} style={{ color: 'rgba(246,232,216,0.8)', fontSize: 13, textDecoration: 'none' }}>
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className="text-[13px] text-[#EAF6EE]/75 no-underline transition-colors hover:text-sage-light"
+                >
                   {t(item.key)}
                 </Link>
               ))}
@@ -345,33 +374,24 @@ export default function PublicLayout() {
           </div>
 
           <div>
-            <p style={{ margin: '0 0 12px', fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#E5B98B' }}>{t('site.footer.contactTitle')}</p>
-            <p style={{ margin: '0 0 6px', fontSize: 13, color: 'rgba(246,232,216,0.8)' }}>Boudhanath, Kathmandu 44600, Nepal</p>
-            <p style={{ margin: '0 0 6px', fontSize: 13, color: 'rgba(246,232,216,0.8)' }}>+977 1 449 2210</p>
-            <p style={{ margin: '0 0 14px', fontSize: 13, color: 'rgba(246,232,216,0.8)' }}>admin@thar-manjushree.edu.np</p>
+            <p className="mt-0 mb-3 text-xs font-bold tracking-[1.4px] text-sage-light uppercase">{t('site.footer.contactTitle')}</p>
+            <p className="mt-0 mb-1.5 text-[13px] text-[#EAF6EE]/75">Boudhanath, Kathmandu 44600, Nepal</p>
+            <p className="mt-0 mb-1.5 text-[13px] text-[#EAF6EE]/75">+977 1 449 2210</p>
+            <p className="mt-0 mb-3.5 text-[13px] text-[#EAF6EE]/75">admin@thar-manjushree.edu.np</p>
             <Link
-              to="/admin"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 8,
-                padding: '8px 14px',
-                borderRadius: radii.md,
-                border: '1px solid rgba(246,232,216,0.35)',
-                color: '#fff',
-                fontSize: 12.5,
-                fontWeight: 700,
-                textDecoration: 'none',
-              }}
+              to="/donate"
+              className="inline-flex items-center gap-2 rounded-full bg-linear-to-br from-sage to-sage-light px-[18px] py-[9px] text-[12.5px] font-extrabold text-ink no-underline shadow-sage"
             >
-              {t('site.staffLogin')} →
+              {t('site.donateNow')} →
             </Link>
           </div>
         </div>
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.12)' }}>
-          <div style={{ maxWidth: 1200, margin: '0 auto', padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 12, color: 'rgba(246,232,216,0.6)' }}>© {new Date().getFullYear()} Thar Manjushree School · {t('site.footer.rights')}</span>
-            <span style={{ fontSize: 12, color: 'rgba(246,232,216,0.6)' }}>{t('app.name')}</span>
+        <div className="border-t border-white/10">
+          <div className="mx-auto flex max-w-[1240px] flex-wrap items-center justify-between gap-2.5 px-[22px] py-3.5">
+            <span className="text-xs text-[#EAF6EE]/55">
+              © {new Date().getFullYear()} Thar Manjushree School · {t('site.footer.rights')}
+            </span>
+            <span className="text-xs text-[#EAF6EE]/55">{t('app.name')}</span>
           </div>
         </div>
       </footer>

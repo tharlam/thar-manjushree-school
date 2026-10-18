@@ -1,14 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { useLanguage } from '../i18n.jsx'
 import { useAdminAuth } from '../auth/AdminAuth.jsx'
-import { colors, font, radii, shadows } from '../theme.js'
+import { useLanguage } from '../i18n.jsx'
+import { cn } from '../lib/cn.js'
 import {
   IconDashboard,
   IconMonks,
-  IconClasses,
   IconAttendance,
-  IconFees,
   IconSettings,
   IconSearch,
   IconGlobe,
@@ -16,133 +14,50 @@ import {
   IconChevron,
   IconLogout,
   IconUser,
+  IconBuilding,
+  IconUsers,
+  IconCalendar,
 } from '../components/icons.jsx'
 
-const navItems = [
-  { path: '/admin', key: 'nav.dashboard', icon: IconDashboard },
-  { path: '/admin/monks', key: 'nav.monks', icon: IconMonks },
-  { path: '/admin/classes', key: 'nav.classes', icon: IconClasses },
-  { path: '/admin/attendance', key: 'nav.attendance', icon: IconAttendance },
-  { path: '/admin/fees', key: 'nav.fees', icon: IconFees },
-  { path: '/admin/content', key: 'nav.content', icon: IconSettings },
-  { path: '/admin/settings', key: 'nav.settings', icon: IconSettings },
+const navGroups = [
+  {
+    labelKey: 'nav.groupOperational',
+    items: [
+      { path: '/admin/monks', labelKey: 'nav.monks', icon: IconMonks },
+      { path: '/admin/attendance', labelKey: 'nav.attendance', icon: IconAttendance },
+    ],
+  },
+  {
+    labelKey: 'nav.groupAdministration',
+    items: [
+      { path: '/admin/admissions', labelKey: 'nav.admissions', icon: IconUser },
+      { path: '/admin/houses', labelKey: 'nav.houses', icon: IconBuilding },
+    ],
+  },
+  {
+    labelKey: 'nav.groupContent',
+    items: [
+      { path: '/admin/content', labelKey: 'nav.content', icon: IconSettings },
+      { path: '/admin/events', labelKey: 'nav.events', icon: IconCalendar },
+    ],
+  },
+  {
+    labelKey: 'nav.groupSystem',
+    items: [
+      { path: '/admin/users', labelKey: 'nav.users', icon: IconUsers },
+      { path: '/admin/settings', labelKey: 'nav.settings', icon: IconSettings },
+      { path: '/admin/notifications', labelKey: 'nav.notifications', icon: IconBell },
+    ],
+  },
 ]
 
-const langMeta = {
-  en: { label: 'English', flag: 'EN' },
-  ne: { label: 'नेपाली', flag: 'ने' },
-  bo: { label: 'བོད་ཡིག', flag: 'བོ' },
-}
-
-function LanguageDropdown({ compact }) {
-  const { lang, setLang, t } = useLanguage()
-  const [open, setOpen] = useState(false)
-  const ref = useRef(null)
-
-  useEffect(() => {
-    const onClick = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false)
-    }
-    document.addEventListener('mousedown', onClick)
-    return () => document.removeEventListener('mousedown', onClick)
-  }, [])
-
-  const current = langMeta[lang] || langMeta.en
-
-  return (
-    <div ref={ref} style={{ position: 'relative' }}>
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 8,
-          padding: '8px 12px',
-          borderRadius: radii.md,
-          border: `1px solid ${colors.border}`,
-          background: colors.surface,
-          color: colors.text,
-          fontFamily: font.sans,
-          fontSize: 13,
-          fontWeight: 600,
-          cursor: 'pointer',
-          transition: 'border-color .15s ease',
-          ':hover': { borderColor: colors.accent },
-        }}
-      >
-        <IconGlobe size={16} color={colors.primary} />
-        {!compact && <span>{t('header.language')}</span>}
-        <span style={{ color: colors.textSoft, fontWeight: 700 }}>{current.flag}</span>
-        <IconChevron size={14} color={colors.muted} style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform .15s ease' }} />
-      </button>
-      {open && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 'calc(100% + 8px)',
-            right: 0,
-            zIndex: 60,
-            minWidth: 190,
-            background: colors.surface,
-            border: `1px solid ${colors.border}`,
-            borderRadius: radii.lg,
-            boxShadow: shadows.pop,
-            padding: 6,
-            animation: 'fadeUp .15s ease',
-          }}
-        >
-          <p style={{ margin: '6px 10px', fontSize: 11, fontWeight: 700, color: colors.muted, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            {t('header.language')}
-          </p>
-          {['en', 'ne', 'bo'].map((code) => (
-            <button
-              key={code}
-              type="button"
-              onClick={() => {
-                setLang(code)
-                setOpen(false)
-              }}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                width: '100%',
-                padding: '8px 10px',
-                borderRadius: radii.sm,
-                background: lang === code ? colors.primarySoft : 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                color: colors.text,
-                fontFamily: font.sans,
-                fontSize: 13,
-                fontWeight: lang === code ? 700 : 500,
-                ':hover': { background: lang === code ? colors.primarySoft : colors.surfaceAlt },
-              }}
-            >
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ display: 'inline-flex', width: 24, height: 24, borderRadius: '50%', background: colors.bg, alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700 }}>
-                  {langMeta[code].flag}
-                </span>
-                {langMeta[code].label}
-              </span>
-              {lang === code && <span style={{ color: colors.primary, fontSize: 12, fontWeight: 800 }}>●</span>}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
-
 function NotificationsDropdown() {
-  const { t } = useLanguage()
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
   const [items, setItems] = useState(() => [
-    { id: 1, textKey: 'dashboard.act1', time: '2h', read: false },
-    { id: 2, textKey: 'dashboard.act2', time: '5h', read: false },
-    { id: 3, textKey: 'dashboard.act3', time: '1d', read: true },
+    { id: 1, text: 'New monk admitted to Level 3', time: '2h', read: false },
+    { id: 2, text: 'Monthly fee of Tenzin Dorje settled', time: '5h', read: false },
+    { id: 3, text: 'Philosophy debate session scheduled', time: '1d', read: true },
   ])
 
   useEffect(() => {
@@ -156,91 +71,43 @@ function NotificationsDropdown() {
   const unread = items.filter((i) => !i.read).length
 
   return (
-    <div ref={ref} style={{ position: 'relative' }}>
+    <div ref={ref} className="relative">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        style={{
-          position: 'relative',
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: 40,
-          height: 40,
-          borderRadius: radii.md,
-          border: `1px solid ${colors.border}`,
-          background: colors.surface,
-          color: colors.textSoft,
-          cursor: 'pointer',
-          ':hover': { background: colors.surfaceAlt },
-        }}
+        className="relative inline-flex size-10 cursor-pointer items-center justify-center rounded-md border border-line bg-surface text-body transition-colors hover:bg-surface-alt"
       >
         <IconBell size={18} />
         {unread > 0 && (
-          <span
-            style={{
-              position: 'absolute',
-              top: -4,
-              right: -4,
-              minWidth: 17,
-              height: 17,
-              padding: '0 4px',
-              borderRadius: radii.round,
-              background: colors.danger,
-              color: '#fff',
-              fontSize: 10,
-              fontWeight: 800,
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
+          <span className="absolute -top-1 -right-1 inline-flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-danger px-1 text-[10px] font-extrabold text-white">
             {unread}
           </span>
         )}
       </button>
       {open && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 'calc(100% + 8px)',
-            right: 0,
-            zIndex: 60,
-            width: 300,
-            background: colors.surface,
-            border: `1px solid ${colors.border}`,
-            borderRadius: radii.lg,
-            boxShadow: shadows.pop,
-            overflow: 'hidden',
-            animation: 'fadeUp .15s ease',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', borderBottom: `1px solid ${colors.border}` }}>
-            <span style={{ fontSize: 13, fontWeight: 700, color: colors.text }}>{t('header.notifications')}</span>
+        <div className="absolute top-[calc(100%+8px)] right-0 z-[60] w-[300px] overflow-hidden rounded-lg border border-line bg-surface shadow-pop animate-fade-up">
+          <div className="flex items-center justify-between border-b border-line px-3.5 py-3">
+            <span className="text-[13px] font-bold text-ink">Notifications</span>
             <button
               type="button"
               onClick={() => setItems((it) => it.map((x) => ({ ...x, read: true })))}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: colors.info, fontSize: 12, fontWeight: 600 }}
+              className="cursor-pointer border-none bg-transparent text-xs font-semibold text-info"
             >
-              {t('header.markRead')}
+              Mark all as read
             </button>
           </div>
           {items.map((item) => (
             <div
               key={item.id}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 10,
-                padding: '10px 14px',
-                background: item.read ? colors.surface : colors.primarySoft,
-                borderBottom: `1px solid ${colors.border}`,
-              }}
+              className={cn(
+                'flex items-center gap-2.5 border-b border-line px-3.5 py-2.5',
+                item.read ? 'bg-surface' : 'bg-pine-soft',
+              )}
             >
-              <span style={{ width: 8, height: 8, borderRadius: '50%', background: item.read ? colors.border : colors.primary, flexShrink: 0 }} />
+              <span className={cn('size-2 shrink-0 rounded-full', item.read ? 'bg-line' : 'bg-pine')} />
               <div>
-                <p style={{ margin: 0, fontSize: 13, color: colors.text }}>{t(item.textKey)}</p>
-                <span style={{ fontSize: 11, color: colors.muted }}>{item.time}</span>
+                <p className="m-0 text-[13px] text-ink">{item.text}</p>
+                <span className="text-[11px] text-muted">{item.time}</span>
               </div>
             </div>
           ))}
@@ -251,7 +118,6 @@ function NotificationsDropdown() {
 }
 
 function ProfileBadge() {
-  const { t } = useLanguage()
   const { logout } = useAdminAuth()
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
@@ -273,89 +139,49 @@ function ProfileBadge() {
   }
 
   return (
-    <div ref={ref} style={{ position: 'relative' }}>
+    <div ref={ref} className="relative">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 10,
-          padding: '5px 8px',
-          borderRadius: radii.lg,
-          border: `1px solid ${colors.border}`,
-          background: colors.surface,
-          cursor: 'pointer',
-        }}
+        className="inline-flex cursor-pointer items-center gap-2.5 rounded-lg border border-line bg-surface px-2 py-1.5"
       >
-        <span
-          style={{
-            width: 34,
-            height: 34,
-            borderRadius: '50%',
-            background: `linear-gradient(135deg, ${colors.primary}, ${colors.primaryDark})`,
-            color: '#fff',
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 12,
-            fontWeight: 800,
-          }}
-        >
+        <span className="inline-flex size-[34px] items-center justify-center rounded-full bg-linear-to-br from-pine to-ink text-xs font-extrabold text-white">
           {initials}
         </span>
-        <span style={{ textAlign: 'left', lineHeight: 1.2 }}>
-          <span style={{ display: 'block', fontSize: 13, fontWeight: 700, color: colors.text }}>{t('app.profileName')}</span>
-          <span style={{ display: 'block', fontSize: 11, color: colors.muted }}>{t('app.profileRole')}</span>
+        <span className="text-left leading-tight">
+          <span className="block text-[13px] font-bold text-ink">Lama Tsering Norbu</span>
+          <span className="block text-[11px] text-muted">Head Administrator</span>
         </span>
-        <IconChevron size={14} color={colors.muted} style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform .15s ease' }} />
+        <span className={cn('inline-flex text-muted transition-transform duration-150', open && 'rotate-180')}>
+          <IconChevron size={14} color="currentColor" />
+        </span>
       </button>
       {open && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 'calc(100% + 8px)',
-            right: 0,
-            zIndex: 60,
-            width: 230,
-            background: colors.surface,
-            border: `1px solid ${colors.border}`,
-            borderRadius: radii.lg,
-            boxShadow: shadows.pop,
-            overflow: 'hidden',
-            animation: 'fadeUp .15s ease',
-          }}
-        >
-          <div style={{ padding: 16, borderBottom: `1px solid ${colors.border}`, display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span
-              style={{
-                width: 42,
-                height: 42,
-                borderRadius: '50%',
-                background: `linear-gradient(135deg, ${colors.primary}, ${colors.primaryDark})`,
-                color: '#fff',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 14,
-                fontWeight: 800,
-              }}
-            >
+        <div className="absolute top-[calc(100%+8px)] right-0 z-[60] w-[230px] overflow-hidden rounded-lg border border-line bg-surface shadow-pop animate-fade-up">
+          <div className="flex items-center gap-3 border-b border-line p-4">
+            <span className="inline-flex size-[42px] items-center justify-center rounded-full bg-linear-to-br from-pine to-ink text-sm font-extrabold text-white">
               {initials}
             </span>
             <div>
-              <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: colors.text }}>{t('app.profileName')}</p>
-              <p style={{ margin: '2px 0 0', fontSize: 12, color: colors.muted }}>{t('app.profileRole')}</p>
+              <p className="m-0 text-[13px] font-bold text-ink">Lama Tsering Norbu</p>
+              <p className="mt-0.5 mb-0 text-xs text-muted">Head Administrator</p>
             </div>
           </div>
-          <div style={{ padding: 6 }}>
-            <button type="button" style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '9px 10px', borderRadius: radii.sm, border: 'none', background: 'transparent', cursor: 'pointer', color: colors.text, fontSize: 13 }}>
-              <IconUser size={16} color={colors.textSoft} />
-              {t('settingsPage.editProfile')}
+          <div className="p-1.5">
+            <button
+              type="button"
+              className="flex w-full cursor-pointer items-center gap-2.5 rounded-sm border-none bg-transparent px-2.5 py-[9px] text-[13px] text-ink"
+            >
+              <IconUser size={16} color="currentColor" />
+              Edit profile
             </button>
-            <button type="button" onClick={handleSignOut} style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '9px 10px', borderRadius: radii.sm, border: 'none', background: 'transparent', cursor: 'pointer', color: colors.danger, fontSize: 13 }}>
+            <button
+              type="button"
+              onClick={handleSignOut}
+              className="flex w-full cursor-pointer items-center gap-2.5 rounded-sm border-none bg-transparent px-2.5 py-[9px] text-[13px] text-danger"
+            >
               <IconLogout size={16} />
-              {t('app.backToLogin')}
+              Sign out
             </button>
           </div>
         </div>
@@ -364,201 +190,120 @@ function ProfileBadge() {
   )
 }
 
+const sideLinkClass = ({ isActive }) =>
+  cn(
+    'flex items-center gap-3 rounded-md border-l-[3px] px-3.5 text-[13.5px] no-underline transition-[background,color]',
+    isActive
+      ? 'border-sage bg-pine font-bold text-white'
+      : 'border-transparent font-medium text-[#F6E8D8]/[0.82] hover:bg-white/5',
+  )
+
 export default function DashboardLayout() {
   const { t } = useLanguage()
   const [search, setSearch] = useState('')
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: colors.bg, fontFamily: font.sans }}>
+    <div className="flex min-h-screen bg-mint font-sans">
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
-          className="admin-overlay"
-          style={{ position: 'fixed', inset: 0, zIndex: 39, background: 'rgba(0,0,0,0.4)' }}
+          className="admin-overlay fixed inset-0 z-[39] bg-black/40"
         />
       )}
 
       <aside
-        className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          bottom: 0,
-          width: 250,
-          background: `linear-gradient(180deg, ${colors.sidebar} 0%, ${colors.primaryDark} 100%)`,
-          color: '#F6E8D8',
-          display: 'flex',
-          flexDirection: 'column',
-          zIndex: 40,
-          boxShadow: '4px 0 20px rgba(0,0,0,0.18)',
-          transition: 'transform .25s ease',
-        }}
+        className={cn('admin-sidebar fixed top-0 bottom-0 left-0 z-40 flex w-[250px] flex-col bg-ink text-[#F3EFE4] shadow-[4px_0_20px_rgba(0,0,0,0.18)] transition-transform duration-[250ms]', sidebarOpen && 'open')}
       >
-        <div style={{ padding: '22px 20px 18px', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span
-              style={{
-                width: 42,
-                height: 42,
-                borderRadius: radii.lg,
-                background: `linear-gradient(135deg, ${colors.accent}, #C7701F)`,
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 20,
-                fontWeight: 800,
-                color: '#fff',
-                flexShrink: 0,
-              }}
-            >
-              ད
+        <div className="border-b border-white/[0.12] px-5 pt-[22px] pb-[18px]">
+          <div className="flex items-center gap-3">
+            <span className="inline-flex size-[42px] shrink-0 items-center justify-center rounded-lg border border-sage/40 bg-linear-to-br from-pine to-[#285848] text-xl font-extrabold text-sage-light">
+              TMS
             </span>
-            <div style={{ lineHeight: 1.25 }}>
-              <span style={{ display: 'block', fontSize: 14, fontWeight: 800, color: '#fff' }}>Tharlam</span>
-              <span style={{ display: 'block', fontSize: 12, color: '#E5B98B', fontWeight: 600 }}>Manjushree School</span>
+            <div className="leading-tight">
+              <span className="block text-sm font-bold text-white">Tharlam</span>
+              <span className="block text-xs font-semibold text-sage-light">Manjushree School</span>
             </div>
           </div>
         </div>
 
-        <p
-          style={{
-            margin: '18px 20px 8px',
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: '1px',
-            textTransform: 'uppercase',
-            color: 'rgba(246, 232, 216, 0.55)',
-          }}
-        >
-          {t('app.admin')}
-        </p>
+        <nav className="flex-1 overflow-y-auto px-3 pb-3">
+          <NavLink
+            to="/admin"
+            end
+            onClick={() => setSidebarOpen(false)}
+            className={({ isActive }) =>
+              cn(sideLinkClass({ isActive }), 'my-[10px] mb-1.5 py-[11px]')
+            }
+          >
+            <IconDashboard size={18} />
+            <span>{t('nav.dashboard')}</span>
+          </NavLink>
 
-        <nav style={{ flex: 1, overflowY: 'auto', padding: '0 12px 12px' }}>
-          {navItems.map(({ path, key, icon: Icon }) => (
-            <NavLink
-              key={path}
-              to={path}
-              end={path === '/admin'}
-              onClick={() => setSidebarOpen(false)}
-              style={({ isActive }) => ({
-                display: 'flex',
-                alignItems: 'center',
-                gap: 12,
-                padding: '11px 14px',
-                marginBottom: 4,
-                borderRadius: radii.md,
-                textDecoration: 'none',
-                fontSize: 13.5,
-                fontWeight: isActive ? 700 : 500,
-                color: isActive ? '#fff' : 'rgba(246, 232, 216, 0.82)',
-                background: isActive ? colors.sidebarActive : 'transparent',
-                borderLeft: isActive ? `3px solid ${colors.accent}` : '3px solid transparent',
-                transition: 'background .15s ease, color .15s ease',
-              })}
-            >
-              <Icon size={18} color={undefined} />
-              <span>{t(key)}</span>
-            </NavLink>
+          {navGroups.map((group) => (
+            <div key={group.labelKey}>
+              <p className="mx-3.5 mt-4 mb-1.5 text-[10.5px] font-bold tracking-[1px] text-[#F6E8D8]/50 uppercase">
+                {t(group.labelKey)}
+              </p>
+              {group.items.map(({ path, labelKey, icon: Icon }) => (
+                <NavLink
+                  key={path}
+                  to={path}
+                  onClick={() => setSidebarOpen(false)}
+                  className={({ isActive }) => cn(sideLinkClass({ isActive }), 'mb-[3px] py-[10px]')}
+                >
+                  <Icon size={18} />
+                  <span>{t(labelKey)}</span>
+                </NavLink>
+              ))}
+            </div>
           ))}
 
           <Link
             to="/"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-              padding: '11px 14px',
-              marginTop: 8,
-              borderRadius: radii.md,
-              textDecoration: 'none',
-              fontSize: 13.5,
-              fontWeight: 600,
-              color: '#E5B98B',
-              background: 'rgba(255,255,255,0.06)',
-              borderLeft: '3px solid transparent',
-            }}
+            className="mt-4 flex items-center gap-3 rounded-md border-l-[3px] border-transparent bg-white/[0.06] px-3.5 py-[11px] text-[13.5px] font-semibold text-sage-light no-underline"
           >
-            <IconGlobe size={18} color="#E5B98B" />
+            <IconGlobe size={18} color="#98B898" />
             <span>{t('nav.publicSite')}</span>
           </Link>
         </nav>
 
-        <div style={{ padding: 14, borderTop: '1px solid rgba(255,255,255,0.12)' }}>
-          <p style={{ margin: 0, fontSize: 11, color: 'rgba(246, 232, 216, 0.5)', textAlign: 'center' }}>
-            {t('site.footer.rights')} · © {new Date().getFullYear()}
+        <div className="border-t border-white/[0.12] p-3.5">
+          <p className="m-0 text-center text-[11px] text-[#F3EFE4]/50">
+            All rights reserved. · © {new Date().getFullYear()}
           </p>
         </div>
       </aside>
 
-      <div style={{ flex: 1, marginLeft: 250, display: 'flex', flexDirection: 'column', minHeight: '100vh' }} className="admin-main">
-        <header
-          style={{
-            position: 'sticky',
-            top: 0,
-            zIndex: 30,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 14,
-            padding: '12px 24px',
-            background: 'rgba(255,255,255,0.92)',
-            backdropFilter: 'blur(8px)',
-            borderBottom: `1px solid ${colors.border}`,
-          }}
-        >
+      <div className="admin-main ml-[250px] flex min-h-screen flex-1 flex-col">
+        <header className="sticky top-0 z-30 flex items-center gap-3.5 border-b border-line bg-white/92 px-6 py-3 backdrop-blur-[8px]">
           <button
             type="button"
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="admin-hamburger"
-            style={{
-              display: 'none',
-              width: 40,
-              height: 40,
-              borderRadius: radii.md,
-              border: `1px solid ${colors.border}`,
-              background: colors.surface,
-              color: colors.text,
-              cursor: 'pointer',
-              fontSize: 18,
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-            }}
+            className="admin-hamburger hidden size-10 shrink-0 cursor-pointer items-center justify-center rounded-md border border-line bg-surface text-lg text-ink"
           >
             ☰
           </button>
 
-          <div style={{ position: 'relative', flex: 1, maxWidth: 420 }}>
-            <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: colors.muted, display: 'inline-flex' }}>
+          <div className="relative max-w-[420px] flex-1">
+            <span className="absolute top-1/2 left-3 inline-flex -translate-y-1/2 text-muted">
               <IconSearch size={16} />
             </span>
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={t('header.quickSearch')}
-              style={{
-                width: '100%',
-                padding: '9px 14px 9px 36px',
-                borderRadius: radii.md,
-                border: `1px solid ${colors.border}`,
-                background: colors.surfaceAlt,
-                fontSize: 13,
-                fontFamily: font.sans,
-                color: colors.text,
-                outline: 'none',
-              }}
+              placeholder="Quick search…"
+              className="w-full rounded-md border border-line bg-surface-alt py-[9px] pr-3.5 pl-9 text-[13px] font-sans text-ink outline-none"
             />
           </div>
 
-          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <LanguageDropdown />
+          <div className="ml-auto flex items-center gap-2.5">
             <NotificationsDropdown />
             <ProfileBadge />
           </div>
         </header>
 
-        <main style={{ flex: 1, padding: 24, overflow: 'auto' }}>
+        <main className="flex-1 overflow-auto p-6">
           <Outlet />
         </main>
       </div>

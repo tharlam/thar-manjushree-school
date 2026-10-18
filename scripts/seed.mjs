@@ -6,8 +6,6 @@
 //   1. Copy .env.example to .env and fill in VITE_SUPABASE_URL and
 //      VITE_SUPABASE_SERVICE_ROLE_KEY (Project Settings -> API -> service_role).
 //   2. Run:  node scripts/seed.mjs
-//   Optional: set SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD in .env to also create
-//   the first admin login (email/password login via Supabase Auth).
 
 import { readFileSync, existsSync } from 'node:fs'
 import { createClient } from '@supabase/supabase-js'
@@ -122,46 +120,10 @@ async function seedGallery() {
   ok(await supabase.from('gallery_photos').insert(rows))
 }
 
-async function seedAdmin() {
-  const email = process.env.SEED_ADMIN_EMAIL
-  const password = process.env.SEED_ADMIN_PASSWORD
-  if (!email || !password) {
-    console.log('No SEED_ADMIN_EMAIL/SEED_ADMIN_PASSWORD - skipping admin creation.')
-    console.log('Create the first admin via the Supabase dashboard (Authentication -> Users)')
-    console.log('then insert a row into public.admin_users with that user id and email.')
-    return
-  }
-  const { data: user, error: userError } = await supabase.auth.admin.createUser({
-    email,
-    password,
-    email_confirm: true,
-  })
-  if (userError) {
-    console.error('Could not create auth user:', userError.message)
-    return
-  }
-  const { error } = await supabase.from('admin_users').upsert(
-    {
-      id: user.id,
-      email: user.email,
-      name: process.env.SEED_ADMIN_NAME || 'School Administrator',
-      role: 'admin',
-      permissions: ['Full access'],
-    },
-    { onConflict: 'id' }
-  )
-  if (error) {
-    console.error('Could not insert admin_users row:', error.message)
-  } else {
-    console.log(`Created admin: ${email}`)
-  }
-}
-
 await seedContent()
 await seedClasses()
 await seedMonks()
 await seedAnnouncements()
 await seedGallery()
-await seedAdmin()
 
 console.log('Done.')

@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useLanguage } from '../i18n.jsx'
-import { colors, font, radii } from '../theme.js'
+import { cn } from '../lib/cn.js'
 import { useAdminAuth } from '../auth/AdminAuth.jsx'
 
 export default function AdminLogin() {
-  const { t } = useLanguage()
   const { login, authenticated } = useAdminAuth()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
@@ -27,112 +25,58 @@ export default function AdminLogin() {
     if (res.ok) {
       navigate('/admin', { replace: true })
     } else {
-      setError(t('login.invalid'))
+      setError('Incorrect email or password. Please try again.')
     }
   }
 
-  const fieldStyle = (hasError) => ({
-    width: '100%',
-    padding: '11px 14px',
-    borderRadius: radii.md,
-    border: `1px solid ${hasError ? colors.danger : colors.border}`,
-    background: colors.surfaceAlt,
-    fontSize: 14,
-    fontFamily: font.sans,
-    color: colors.text,
-    outline: 'none',
-    boxSizing: 'border-box',
-  })
+  const fieldClass = 'box-border w-full rounded-md border bg-surface-alt px-3.5 py-[11px] text-[14px] font-sans text-ink outline-none'
 
-  const labelStyle = { display: 'block', fontSize: 12, fontWeight: 700, color: colors.text, marginBottom: 6 }
+  const labelClass = 'mb-1.5 block text-[12px] font-bold text-ink'
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        background: `linear-gradient(135deg, ${colors.sidebar} 0%, ${colors.primaryDark} 50%, ${colors.primary} 100%)`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontFamily: font.sans,
-        padding: 20,
-      }}
-    >
-      <div
-        style={{
-          width: '100%',
-          maxWidth: 420,
-          background: colors.surface,
-          borderRadius: radii.lg,
-          boxShadow: '0 24px 80px rgba(0,0,0,0.35)',
-          overflow: 'hidden',
-          animation: 'fadeUp .3s ease',
-        }}
-      >
-        <div
-          style={{
-            background: `linear-gradient(135deg, ${colors.primary}, ${colors.primaryDark})`,
-            padding: '28px 28px 24px',
-            textAlign: 'center',
-          }}
-        >
-          <span
-            style={{
-              width: 56,
-              height: 56,
-              borderRadius: radii.lg,
-              background: `linear-gradient(135deg, ${colors.accent}, #C7701F)`,
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 28,
-              fontWeight: 800,
-              color: '#fff',
-              marginBottom: 14,
-            }}
-          >
-            ད
-          </span>
-          <h1 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: '#fff' }}>
-            {t('app.name')}
+    <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-ink to-pine p-5 font-sans">
+      <div className="w-full max-w-[420px] animate-[fadeUp_0.3s_ease] overflow-hidden rounded-lg bg-surface shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
+        <div className="bg-linear-to-br from-pine to-ink px-7 pt-7 pb-6 text-center">
+          <h1 className="m-0 text-[20px] font-extrabold text-white">
+            Tharlam Manjushree School
           </h1>
-          <p style={{ margin: '6px 0 0', fontSize: 13, color: 'rgba(255,255,255,0.75)' }}>
-            {t('app.admin')}
+          <p className="mt-1.5 mb-0 text-[13px] text-white/75">
+            Admin Portal
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} style={{ padding: '28px 28px 24px' }}>
-          <p style={{ margin: '0 0 20px', fontSize: 14, color: colors.textSoft, lineHeight: 1.5 }}>
-            {t('login.prompt')}
+        <form onSubmit={handleSubmit} className="px-7 pt-7 pb-6">
+          <p className="mt-0 mb-5 text-[14px] leading-[1.5] text-body">
+            Enter your staff email and password to access the Admin Portal.
           </p>
 
-          <label style={labelStyle}>
-            {t('login.email')}
+          <label className={labelClass}>
+            Email
           </label>
           <input
             type="email"
             value={email}
             onChange={(e) => { setEmail(e.target.value); setError('') }}
-            placeholder={t('login.placeholderEmail')}
+            placeholder="you@school.edu.np"
             autoComplete="username"
             autoFocus
-            style={fieldStyle(false)}
+            className={cn(fieldClass, 'border-line')}
           />
 
-          <label style={{ ...labelStyle, marginTop: 16 }}>
-            {t('login.password')}
+          <label className={cn(labelClass, 'mt-4')}>
+            Password
           </label>
           <input
             type="password"
             value={password}
             onChange={(e) => { setPassword(e.target.value); setError('') }}
-            placeholder={t('login.placeholder')}
+            placeholder="Enter your password"
             autoComplete="current-password"
-            style={fieldStyle(Boolean(error))}
+            className={cn(fieldClass, error ? 'border-danger' : 'border-line')}
           />
 
           {error && (
-            <p style={{ margin: '8px 0 0', fontSize: 12.5, color: colors.danger, fontWeight: 600 }}>
+            <p className="mt-2 mb-0 text-[12.5px] font-semibold text-danger">
               {error}
             </p>
           )}
@@ -140,31 +84,21 @@ export default function AdminLogin() {
           <button
             type="submit"
             disabled={busy}
-            style={{
-              width: '100%',
-              marginTop: 22,
-              padding: '12px 0',
-              borderRadius: radii.md,
-              background: `linear-gradient(135deg, ${colors.primary}, ${colors.primaryDark})`,
-              color: '#fff',
-              border: 'none',
-              fontSize: 14,
-              fontWeight: 700,
-              fontFamily: font.sans,
-              cursor: busy ? 'default' : 'pointer',
-              opacity: busy ? 0.7 : 1,
-            }}
+            className={cn(
+              'mt-[22px] w-full rounded-md border-none bg-linear-to-br from-pine to-ink py-3 text-[14px] font-bold font-sans text-white',
+              busy ? 'cursor-default opacity-70' : 'cursor-pointer',
+            )}
           >
-            {busy ? t('login.signingIn') : t('login.submit')}
+            {busy ? 'Signing in…' : 'Sign In'}
           </button>
 
-          <p style={{ margin: '16px 0 0', fontSize: 11.5, color: colors.muted, textAlign: 'center' }}>
-            {t('login.hint')}
+          <p className="mt-4 mb-0 text-center text-[11.5px] text-muted">
+            Protected by Firebase Auth. Sessions expire automatically.
           </p>
         </form>
 
-        <div style={{ padding: '14px 28px', borderTop: `1px solid ${colors.border}`, textAlign: 'center' }}>
-          <span style={{ fontSize: 11.5, color: colors.muted }}>
+        <div className="border-t border-line px-7 py-3.5 text-center">
+          <span className="text-[11.5px] text-muted">
             © {new Date().getFullYear()} Tharlam Manjushree School
           </span>
         </div>

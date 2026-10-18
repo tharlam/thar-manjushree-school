@@ -17,27 +17,27 @@ export const contentDefaults = {
   pages: {
     home: {
       heroTitle: F(
-        'Preserving the Living Tradition of Buddhist Learning',
+        'Where Ancient Wisdom Awakens Modern Minds',
         'बौद्ध शिक्षाको जीवन्त परम्परा संरक्षण गर्दै',
         'ནང་བསྟན་སློབ་གཉེར་གྱི་གཞོན་ནུའི་སྲོལ་རྒྱུན་སྲུང་སྐྱོབ་བྱེད་བཞིན་པ།'
       ),
       heroSubtitle: F(
-        'Thar Manjushree School nurtures young monks with a dual curriculum of classical Buddhist philosophy and modern academics in the heart of Nepal.',
+        'Bridging centuries of sacred Sakya monastic tradition with modern schooling, in a serene sanctuary in the heart of Boudha, Kathmandu. Completely free for every young monk in our care.',
         'थार मन्जुश्री विद्यालयले नेपालको मुटुमा रहेर शास्त्रीय बौद्ध दर्शन र आधुनिक शैक्षिक विषयहरू सिकाएर युवा भिक्षुहरूको पोषण गर्छ।',
         'ཐར་དམན་ཛུ་ཤྲི་སློབ་གྲྭས་བལ་ཡུལ་གྱི་སྙིང་པོར་གཞུང་ལུགས་ཀྱི་ནང་བསྟན་མཚན་ཉིད་དང་དེང་རབས་སློབ་གཉེར་གཉིས་ཀ་སློབ་སྦྱོང་བྱས་ཏེ་གྲྭ་བ་གཞོན་ནུ་རྣམས་འཚར་ལོངས་སུ་གཏོང་བཞིན་ཡོད།'
       ),
       welcomeTitle: F(
-        'Welcome to Thar Manjushree School',
+        'Welcome to the School & Monastery',
         'थार मन्जुश्री विद्यालयमा स्वागत छ',
         'ཐར་དམན་ཛུ་ཤྲི་སློབ་གྲྭར་དགའ་བསུ་ཞུ་བཞིན་ཡོད།'
       ),
       welcomeBody: F(
-        'For over half a century our monastery has been a home for young boys who wish to devote their lives to study, meditation and service. Every monk follows a complete journey — from learning the Tibetan alphabet as a child to mastering the great philosophical texts of the Nalanda tradition — while also gaining a modern education in English, mathematics, science and computers.',
+        'Beside the great Boudhanath Stupa in Kathmandu, Tharlam Manjushree School stands as a living sanctuary for spiritual preservation and intellectual growth. We are part of Tharlam Monastery, and we believe that true education should not only inform the mind but also transform the heart.\n\nOur curriculum brings two great traditions of learning together under one roof. Here, young monks receive traditional monastic training, ethics, and scriptural study, and at the same time learn English, Tibetan, Mathematics, and General Science in a modern classroom. Every child is given his education, his meals, his clothing, and a home within the monastery, entirely free of charge. We are not just educating students; we are nurturing kind-hearted, capable young people who carry both the wisdom of their heritage and the skills to meet the modern world.',
         'आधा शताब्दीभन्दा बढी समयदेखि हाम्रो मठ युवा केटाहरूका लागि अध्ययन, ध्यान र सेवामा जीवन समर्पण गर्न चाहनेहरूको घर रहँदै आएको छ। प्रत्येक भिक्षुले बाल्यकालमा तिब्बती वर्णमाला सिक्नेदेखि नालन्दा परम्पराका महान दार्शनिक ग्रन्थहरूमा निपुण हुनेसम्मको पूर्ण यात्रा तय गर्छ, साथै अंग्रेजी, गणित, विज्ञान र कम्प्युटरमा आधुनिक शिक्षा पनि प्राप्त गर्छ।',
         'ལོ་ངོ་ཕྱེད་ཀ་ལས་ལྷག་རིང་ནས་ང་ཚོའི་དགོན་སྡེ་འདི་སློབ་སྦྱོང་། བསྒོམ་སྒྲུབ། ཞབས་ཞུ་བཅས་ཀྱི་ཆེད་དུ་འཚོ་བ་སྒྲུབ་འདོད་པའི་གྲྭ་བ་གཞོན་ནུ་ཚོའི་ཁྱིམ་ཞིག་ཡིན། གྲྭ་བ་རེ་རེས་ཆུང་དུས་བོད་ཡིག་གི་ཀ་ཁ་སློབ་པ་ནས་ཎཱ་ལནྡ་གྱི་སྲོལ་རྒྱུན་མཚན་ཉིད་ཀྱི་གཞུང་ཆེན་པོ་རྣམས་ལ་མཁས་པར་གྱུར་པའི་བར་གྱི་ལམ་ཡོངས་རྫོགས་བགྲོད་པ་དང་། དེ་དང་ཆབས་ཅིག་དབྱིན་ཡིག་དང་། རྩིས་རིག། ཚན་རིག། གློག་ཀླད་བཅས་ཀྱི་དེང་རབས་སློབ་གཉེར་ཡང་ཐོབ་བཞིན་ཡོད།'
       ),
-      ctaSupport: F('Support Us', 'हामीलाई सहयोग गर्नुहोस्', 'རྒྱབ་སྐྱོར་གནང་རོགས།'),
-      ctaAdmissions: F('Admissions', 'भर्ना', 'ཐོ་འགོད།'),
+      ctaSupport: F('Support Our Mission', 'हामीलाई सहयोग गर्नुहोस्', 'རྒྱབ་སྐྱོར་གནང་རོགས།'),
+      ctaAdmissions: F('Apply for Enrollment', 'भर्ना', 'ཐོ་འགོད།'),
     },
     tradition: {
       introTitle: F('Our Monastic Tradition', 'हाम्रो मठ परम्परा', 'ང་ཚོའི་དགོན་སྡེའི་སྲོལ་རྒྱུན།'),
@@ -118,57 +118,57 @@ export const contentDefaults = {
       ),
     },
     admissions: {
-      introTitle: F('Admissions & Ordination', 'भर्ना र दीक्षा', 'ཐོ་འགོད་དང་རབ་བྱུང་།'),
+      introTitle: F('Admission', 'भर्ना र दीक्षा', 'ཐོ་འགོད་དང་རབ་བྱུང་།'),
       introBody: F(
-        'Thar Manjushree School welcomes boys between the ages of 7 and 14 who wish to join the monastic community. We provide food, shelter, clothing, education and healthcare at no cost to the family, sustained entirely by the generosity of our supporters.',
+        'We welcome boys aged 7\u201314 who genuinely wish to join our monastic community. Once accepted, a child\u2019s education, meals, clothing and housing are completely free of charge.',
         'थार मन्जुश्री विद्यालय मठ समुदायमा सामेल हुन चाहने ७ देखि १४ वर्ष उमेरका केटाहरूलाई स्वागत गर्छ। हामी परिवारलाई कुनै खर्च बिना खाना, आश्रय, लुगा, शिक्षा र स्वास्थ्य सेवा प्रदान गर्छौं, जुन पूर्ण रूपमा हाम्रा समर्थकहरूको उदारताबाट टिकेको छ।',
         'ཐར་དམན་ཛུ་ཤྲི་སློབ་གྲྭས་མཚམས་སྡེའི་སྡེ་ཚོགས་སུ་ཞུགས་འདོད་པའི་ལོ་༧ ནས་༡༤ བར་གྱི་བུ་གཞོན་རྣམས་ལ་དགའ་བསུ་ཞུ་བཞིན་ཡོད། ང་ཚོས་ཁྱིམ་ཚང་ལ་གྲོན་གང་ཡང་མེད་པར་ཟས་དང་། བསྡབས་གོས། བཞུགས་ས། སློབ་གཉེར་དང་སྨན་བཅོས་སྤྲོད་ཅིང་། དེ་ཡོངས་རྫོགས་ང་ཚོའི་རྒྱབ་སྐྱོར་པ་རྣམས་ཀྱི་སྙིང་རྗེའི་སྒོ་ནས་གནས་བཞིན་ཡོད།'
       ),
-      requirementsTitle: F('Eligibility & Requirements', 'योग्यता र आवश्यकताहरू', 'ཐོ་འགོད་ཀྱི་ཆ་རྐྱེན།'),
+      requirementsTitle: F('Criteria for Entry', 'योग्यता र आवश्यकताहरू', 'ཐོ་འགོད་ཀྱི་ཆ་རྐྱེན།'),
       requirementsBody: F(
-        'Applicants should be boys aged 7–14, in good health, and willing to follow the monastic code of discipline. No prior education is required. A guardian or family member must give consent and share contact details so we can keep them informed of the child\u2019s progress.',
+        'The applicant must be a male child between the ages of 7 and 14, must express an authentic, personal desire to join the monastic community, must pass a basic medical check, and both parents or legal guardians must provide clear written consent.',
         'आवेदकहरू ७–१४ वर्ष उमेरका, स्वस्थ र मठको अनुशासन पालना गर्न तयार केटाहरू हुनुपर्छ। पूर्व शिक्षा आवश्यक छैन। अभिभावक वा परिवारको सदस्यले सहमति दिनुपर्छ र बालबालिकाको प्रगतिको जानकारी लिन सक्ने गरी सम्पर्क विवरण साझा गर्नुपर्छ।',
         'ཞུ་འདེགས་བྱེད་མཁན་ནི་ལོ་༧–༡༤ བར་གྱི་བུ་གཞོན་ཤེས་ལྡན་ཅིང་དགོན་སྡེའི་བཅའ་ཁྲིམས་ལ་རྒྱུན་འཛིན་བྱེད་འདོད་པ་ཡིན་དགོས། སྔོན་གྱི་སློབ་གཉེར་དགོས་མིན་མེད། སྐྱོང་མཁན་ནམ་ཁྱིམ་མི་ཞིག་གིས་གནང་བརྡ་བྱེད་དགོས་པ་དང་། བུ་ཆུང་གི་འཕེལ་རིམ་གྱི་གནས་ཚུལ་ཤེས་ཐུབ་པའི་ཆེད་འབྲེལ་གཏུགས་ཀྱི་གནས་ཚུལ་གཅིག་སྤྱོད་བྱེད་དགོས།'
       ),
-      processTitle: F('Admission Process', 'भर्ना प्रक्रिया', 'ཐོ་འགོད་ཀྱི་རིམ་པ།'),
+      processTitle: F('The Four Steps to Enrollment', 'भर्ना प्रक्रिया', 'ཐོ་འགོད་ཀྱི་རིམ་པ།'),
       processBody: F(
-        'Families may submit the online application form below. Applications are reviewed by the admissions council, and families are contacted within two weeks. Accepted students are invited for a visit before final ordination and enrollment.',
+        'Step 1 - The Digital Inquiry: submit the initial application form through our website. Step 2 - The Monastic Invitation: shortlisted families stay at the guest house for a 3-day trial evaluation. Step 3 - The Spiritual & Academic Dialogue: a gentle interview with the Principal. Step 4 - The Hair-Cutting & Robe Ceremony: the student is assigned to his house and officially enters the novice order.',
         'परिवारहरूले तलको अनलाइन आवेदन फारम पेश गर्न सक्छन्। भर्ना परिषद्ले आवेदनहरूको समीक्षा गर्छ र दुई हप्ताभित्र परिवारहरूसँग सम्पर्क गरिन्छ। स्वीकृत विद्यार्थीहरूलाई अन्तिम दीक्षा र भर्नाअघि भ्रमणका लागि निम्तो दिइन्छ।',
         'ཁྱིམ་ཚང་རྣམས་ཀྱིས་འོག་ཏུ་ཡོད་པའི་གློག་བརྙན་ཞུ་འདེགས་ཀྱི་ཕོར་མ་ཞིག་འབུལ་ཆོག། ཐོ་འགོད་ཀྱི་ཚོགས་པས་ཞུ་འདེགས་རྣམས་ཞིབ་བཤེར་བྱེད་ཅིང་ཁྱིམ་ཚང་རྣམས་ལ་ཟླ་བ་ཕྱེད་ཀྱི་ནང་འབྲེལ་གཏུགས་ཐོབ་ཀྱིན་ཡོད། ལེགས་པར་ངོས་འཛིན་བྱས་པའི་སློབ་མ་རྣམས་ལ་རབ་བྱུང་དང་ཐོ་འགོད་གཏན་པའི་སྔོན་དུ་ལྟ་རྟོག་ཞིག་གི་ཆེད་དུ་དགའ་བསུ་ཞུ་བཞིན་ཡོད།'
       ),
     },
     gallery: {
-      introTitle: F('Gallery & Festivals', 'ग्यालरी र महोत्सवहरू', 'པར་ཁང་དང་དུས་ཆེན་རྣམས།'),
+      introTitle: F('Media Gallery', 'ग्यालरी र महोत्सवहरू', 'པར་ཁང་དང་དུས་ཆེན་རྣམས།'),
       introBody: F(
-        'From the great Monlam prayer festival to daily classroom life, our gallery celebrates the rhythm of monastic life. Browse photographs of ceremonies, debates, thangka painting and the festivals that mark our year.',
+        'From lively debate in the courtyard to the sacred murals of our shrines and joyful games during breaks, our gallery celebrates the rhythm of monastic life. Browse the collections below.',
         'महान मोनलाम प्रार्थना महोत्सवदेखि दैनिक कक्षा जीवनसम्म, हाम्रो ग्यालरीले मठ जीवनको लयलाई मनाउँछ। समारोह, बहस, थाङ्का चित्रकला र हाम्रो वर्षलाई चिन्ह लगाउने महोत्सवहरूका तस्बिरहरू हेर्नुहोस्।',
         'སྨོན་ལམ་ཆེན་མོའི་དུས་ཆེན་ནས་རྒྱུན་ལྡན་གྱི་སློབ་ཚན་གྱི་འཚོ་བའི་བར་ང་ཚོའི་པར་ཁང་གིས་དགོན་སྡེའི་འཚོ་བའི་རྣམ་པ་བསྟན་བཞིན་ཡོད། མཆོད་སྒྲིག་དང་། རྩོད་འཐབ། ཐང་གའི་རིག་རྩལ། ལོ་འཁོར་གྱི་དུས་ཆེན་བཅས་ཀྱི་པར་རྣམས་ལྟ་བར་འཚལ།'
       ),
     },
     donations: {
-      introTitle: F('Support & Donations', 'सहयोग र दान', 'རྒྱབ་སྐྱོར་དང་ཞལ་འདེབས།'),
+      introTitle: F('Support Our Work', 'सहयोग र दान', 'རྒྱབ་སྐྱོར་དང་ཞལ་འདེབས།'),
       introBody: F(
-        'Every monk at Thar Manjushree is supported entirely by the kindness of donors. Your gift — whether one-time or monthly — provides food, clothing, medical care and education. Every dollar is accounted for and reported transparently.',
+        'Giving free education, meals, clothing and housing to every young monk in our care is a monumental financial task. We rely on the kindness of sponsors and well-wishers, and every gift makes a real difference.',
         'थार मन्जुश्रीका प्रत्येक भिक्षुलाई पूर्ण रूपमा दाताहरूको कृपाबाट सहयोग गरिन्छ। तपाईंको उपहार — एकमुष्ट वा मासिक — ले खाना, लुगा, स्वास्थ्य सेवा र शिक्षा प्रदान गर्छ। हरेक रुपैयाँको हिसाब राखिन्छ र पारदर्शी रूपमा प्रतिवेदन दिइन्छ।',
         'ཐར་དམན་ཛུ་ཤྲིའི་གྲྭ་བ་རེ་རེ་ཡང་སྦྱིན་བདག་རྣམས་ཀྱི་བྱམས་བརྩེའི་སྒོ་ནས་ཡོངས་རྫོགས་རྒྱབ་སྐྱོར་བྱེད་བཞིན་ཡོད། ཁྱེད་ཀྱི་སྦྱིན་པ་ནི་ཐེངས་རེའམ་ཟླ་རྒྱུན་གང་ཡིན་རུང་ཟས་དང་། གོས་ཆ། སྨན་བཅོས། སློབ་གཉེར་བཅས་སྤྲོད་ཀྱིན་ཡོད། གྲངས་ཐང་རེ་རེའི་རྩིས་ཐོ་ཉར་ཞིང་གསལ་པོར་སྙན་ཞུ་བྱེད་བཞིན་ཡོད།'
       ),
-      bankTitle: F('Bank Transfer Details', 'बैंक स्थानान्तरण विवरण', 'དངུལ་ཁང་གི་བརྒྱུད་སྤྲོད་གནས་ཚུལ།'),
+      bankTitle: F('Direct Wire Transfer Coordinates', 'बैंक स्थानान्तरण विवरण', 'དངུལ་ཁང་གི་བརྒྱུད་སྤྲོད་གནས་ཚུལ།'),
       bankBody: F(
         'Donations may also be sent directly by bank transfer. Please write your email in the transfer note so we can send you a receipt and acknowledgment.',
         'दानहरू बैंक स्थानान्तरणबाट पनि सिधै पठाउन सकिन्छ। हामीले तपाईंलाई रसिद र स्वीकृति पठाउन सकौं भनेर स्थानान्तरण नोटमा आफ्नो इमेल लेख्नुहोस्।',
         'ཞལ་འདེབས་དངུལ་ཁང་གི་བརྒྱུད་སྤྲོད་ཀྱི་སྒོ་ནས་ཐད་ཀར་བཏང་ཆོག ང་ཚོས་ཁྱེད་ལ་ཐོབ་ཐང་དང་ལན་ཆ་ཕྱིར་སྤྲོད་ཐུབ་པའི་ཆེད་དུ་བརྒྱུད་སྤྲོད་ཀྱི་མཆན་ཡིག་ཏུ་ཁྱེད་ཀྱི་གློག་འཕྲིན་འབྲི་རོགས།'
       ),
-      transparencyTitle: F('Financial Transparency', 'वित्तीय पारदर्शिता', 'རྩིས་གནས་གསལ་པོ།'),
+      transparencyTitle: F('Our Guarantee of Financial Honesty', 'वित्तीय पारदर्शिता', 'རྩིས་གནས་གསལ་པོ།'),
       transparencyBody: F(
-        'We publish an annual report detailing all income and expenditure. Donors may request itemized statements of how their contribution was used at any time.',
+        '"We operate with complete transparency. Your contribution goes directly toward the food, education, clothing and housing of our young monks. We publish our annual audited accounts on this page each year for public verification."',
         'हामी सबै आम्दानी र खर्चको विवरणसहित वार्षिक प्रतिवेदन प्रकाशित गर्छौं। दाताहरूले आफ्नो योगदान कसरी प्रयोग भयो भन्ने विस्तृत विवरण जुनसुकै समय माग्न सक्छन्।',
         'ང་ཚོས་འབྲེལ་ཡོད་འཛུགས་སྐྲུན་ཡོངས་ཀྱི་ཐོ་ཉར་ཡོད་པའི་ལོ་དེབ་རེ་རེ་དཔེ་སྐྲུན་བྱེད་བཞིན་ཡོད། སྦྱིན་བདག་རྣམས་ཀྱིས་རང་གི་སྦྱིན་པ་གང་ལུགས་ཀྱིས་བེད་སྤྱོད་བྱས་པའི་གསལ་བཤད་རེ་རེ་དུས་གང་འདྲ་རུང་ཞུ་ཆོག་བཞིན་ཡོད།'
       ),
     },
     contact: {
-      introTitle: F('Contact & Location', 'सम्पर्क र स्थान', 'འབྲེལ་གཏུགས་དང་ས་གནས།'),
+      introTitle: F('Connect With Us', 'सम्पर्क र स्थान', 'འབྲེལ་གཏུགས་དང་ས་གནས།'),
       introBody: F(
-        'We would love to welcome you to our campus. Visitors are welcome most days between morning prayers and evening study. Please reach out before planning your visit.',
+        'We would love to welcome you to our campus. Plan a respectful, mindful visit to our temple grounds at Tharlam Monastery in Boudha, Kathmandu. Please reach out before planning your visit.',
         'हामी तपाईंलाई हाम्रो क्याम्पसमा स्वागत गर्न चाहन्छौं। प्रायः दिन बिहानको प्रार्थना र साँझको अध्ययनको बीचमा आगन्तुकहरूलाई स्वागत गरिन्छ। भ्रमणको योजना बनाउनुअघि कृपया सम्पರ್ಕ गर्नुहोस्।',
         'ང་ཚོས་ཁྱེད་ཅག་ང་ཚོའི་གླིང་འཁོར་དུ་དགའ་བསུ་ཞུ་འདོད། ཉིན་མང་པོར་ཐོག་མའི་མཆོད་པ་དང་དགོང་མོའི་སློབ་སྦྱོང་གི་བར་དུ་མི་ཚོར་དགའ་བསུ་ཞུ་བཞིན་ཡོད། ལྟ་རྟོག་གི་འཆར་གཞི་བཟོ་བའི་སྔོན་དུ་འབྲེལ་གཏུགས་གནང་རོགས།'
       ),

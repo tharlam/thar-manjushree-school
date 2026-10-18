@@ -1,9 +1,9 @@
 // Currency helpers.
 //
-// Khalti payments arrive in NPR (Nepalese Rupees). Admin-entered fees and the
-// original seeded prototype data are in USD. Aggregate statistics are shown as
-// "~USD" using the fixed reference rate below (kept in one place so it is easy
-// to update). Per-item amounts always show their native currency.
+// Admin-entered fees and the original seeded prototype data are in USD.
+// Aggregate statistics are shown as "~USD" using the fixed reference rate
+// below (kept in one place so it is easy to update). Per-item amounts always
+// show their native currency.
 
 export const NPR_PER_USD = 135
 

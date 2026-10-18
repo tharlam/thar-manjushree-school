@@ -1,37 +1,29 @@
 /* eslint-disable react-refresh/only-export-components */
-import { colors, font, radii, shadows } from '../theme.js'
+import { colors } from '../theme.js'
+import { cn } from '../lib/cn.js'
 import { IconSearch, IconCheck, IconX } from './icons.jsx'
 
 const tagPalette = {
-  success: { bg: colors.successSoft, fg: colors.success },
-  danger: { bg: colors.dangerSoft, fg: colors.danger },
-  warning: { bg: colors.warningSoft, fg: colors.warning },
-  info: { bg: colors.infoSoft, fg: colors.info },
-  neutral: { bg: '#EFECE6', fg: colors.textSoft },
-  accent: { bg: colors.accentSoft, fg: '#A0651A' },
-  primary: { bg: colors.primarySoft, fg: colors.primary },
-  purple: { bg: '#F0E6F8', fg: colors.purple },
-  teal: { bg: '#E0F4F6', fg: colors.teal },
+  success: 'bg-success-soft text-success',
+  danger: 'bg-danger-soft text-danger',
+  warning: 'bg-warning-soft text-warning',
+  info: 'bg-info-soft text-info',
+  neutral: 'bg-[#EFECE6] text-body',
+  accent: 'bg-sage-soft text-[#A0651A]',
+  primary: 'bg-pine-soft text-pine',
+  purple: 'bg-[#F0E6F8] text-purple',
+  teal: 'bg-[#E0F4F6] text-teal',
 }
 
 export function Badge({ tone = 'neutral', children, dot }) {
-  const t = tagPalette[tone] || tagPalette.neutral
   return (
     <span
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 6,
-        padding: '3px 10px',
-        borderRadius: radii.round,
-        fontSize: 12,
-        fontWeight: 600,
-        whiteSpace: 'nowrap',
-        background: t.bg,
-        color: t.fg,
-      }}
+      className={cn(
+        'inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px] text-xs font-semibold whitespace-nowrap',
+        tagPalette[tone] || tagPalette.neutral,
+      )}
     >
-      {dot && <span style={{ width: 7, height: 7, borderRadius: '50%', background: t.fg }} />}
+      {dot && <span className="size-[7px] rounded-full bg-current" />}
       {children}
     </span>
   )
@@ -59,19 +51,15 @@ export function statusTone(status) {
   }
 }
 
-export function Card({ children, style, pad = 20, hover }) {
+export function Card({ children, style, className, pad = 20, hover }) {
   return (
     <div
-      style={{
-        background: colors.surface,
-        border: `1px solid ${colors.border}`,
-        borderRadius: radii.lg,
-        boxShadow: shadows.card,
-        padding: pad,
-        transition: 'box-shadow .18s ease, transform .18s ease',
-        ...(hover ? { ':hover': { boxShadow: shadows.pop, transform: 'translateY(-2px)' } } : null),
-        ...style,
-      }}
+      className={cn(
+        'rounded-lg border border-line bg-surface shadow-card transition-[box-shadow,transform]',
+        hover && 'hover:shadow-pop hover:-translate-y-0.5',
+        className,
+      )}
+      style={{ padding: pad, ...style }}
     >
       {children}
     </div>
@@ -80,10 +68,10 @@ export function Card({ children, style, pad = 20, hover }) {
 
 export function CardHeader({ title, subtitle, right }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 16 }}>
+    <div className="mb-4 flex items-start justify-between gap-3">
       <div>
-        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: colors.text }}>{title}</h3>
-        {subtitle && <p style={{ margin: '4px 0 0', fontSize: 13, color: colors.muted }}>{subtitle}</p>}
+        <h3 className="m-0 text-base font-bold text-ink">{title}</h3>
+        {subtitle && <p className="mt-1 mb-0 text-[13px] text-muted">{subtitle}</p>}
       </div>
       {right}
     </div>
@@ -96,35 +84,26 @@ export function StatCard({ label, value, delta, icon, color, onClick, active, hi
       type="button"
       onClick={onClick}
       title={hint}
-      style={{
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 10,
-        padding: 18,
-        borderRadius: radii.lg,
-        background: colors.surface,
-        border: `1px solid ${active ? color : colors.border}`,
-        borderTop: `3px solid ${color}`,
-        boxShadow: shadows.card,
-        textAlign: 'left',
-        cursor: onClick ? 'pointer' : 'default',
-        fontFamily: font.sans,
-        transition: 'box-shadow .18s ease, transform .18s ease',
-        ':hover': onClick ? { boxShadow: shadows.pop, transform: 'translateY(-2px)' } : null,
-      }}
+      className={cn(
+        'relative flex flex-col gap-2.5 rounded-lg border border-line bg-surface p-[18px] text-left font-sans shadow-card transition-[box-shadow,transform]',
+        onClick && 'cursor-pointer hover:shadow-pop hover:-translate-y-0.5',
+      )}
+      style={{ borderColor: active ? color : undefined, borderTop: `3px solid ${color}` }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ display: 'flex', alignItems: 'center', gap: 8, color: colors.textSoft, fontSize: 13, fontWeight: 600 }}>
-          <span style={{ display: 'inline-flex', width: 30, height: 30, borderRadius: radii.sm, alignItems: 'center', justifyContent: 'center', background: `${color}1A`, color }}>
+      <div className="flex items-center justify-between">
+        <span className="flex items-center gap-2 text-[13px] font-semibold text-body">
+          <span
+            className="inline-flex size-[30px] items-center justify-center rounded-sm"
+            style={{ background: `${color}1A`, color }}
+          >
             {icon}
           </span>
           {label}
         </span>
       </div>
-      <span style={{ fontSize: 28, fontWeight: 800, color: colors.text, letterSpacing: '-0.5px' }}>{value}</span>
+      <span className="text-[28px] font-extrabold tracking-[-0.5px] text-ink">{value}</span>
       {delta != null && (
-        <span style={{ fontSize: 12, fontWeight: 600, color: delta >= 0 ? colors.success : colors.danger }}>
+        <span className={cn('text-xs font-semibold', delta >= 0 ? 'text-success' : 'text-danger')}>
           {delta >= 0 ? '▲' : '▼'} {Math.abs(delta)}% {hint || ''}
         </span>
       )}
@@ -132,49 +111,45 @@ export function StatCard({ label, value, delta, icon, color, onClick, active, hi
   )
 }
 
-export function ProgressBar({ value, color = colors.accent, height = 8, style }) {
+export function ProgressBar({ value, color = colors.accent, height = 8, style, className }) {
   return (
-    <div style={{ background: colors.border, borderRadius: radii.round, height, overflow: 'hidden', ...style }}>
-      <div style={{ width: `${Math.min(100, Math.max(0, value))}%`, height: '100%', background: color, borderRadius: radii.round, transition: 'width .4s ease' }} />
+    <div className={cn('overflow-hidden rounded-full bg-line', className)} style={{ height, ...style }}>
+      <div
+        className="h-full rounded-full transition-[width] duration-[400ms] ease-out"
+        style={{ width: `${Math.min(100, Math.max(0, value))}%`, background: color }}
+      />
     </div>
   )
 }
 
-export function Button({ children, onClick, tone = 'primary', size = 'md', disabled, type = 'button', icon, style }) {
-  const tones = {
-    primary: { bg: colors.primary, fg: '#fff', border: colors.primary },
-    accent: { bg: colors.accent, fg: '#fff', border: colors.accent },
-    success: { bg: colors.success, fg: '#fff', border: colors.success },
-    danger: { bg: colors.danger, fg: '#fff', border: colors.danger },
-    outline: { bg: colors.surface, fg: colors.text, border: colors.border },
-    ghost: { bg: 'transparent', fg: colors.textSoft, border: 'transparent' },
-  }
-  const t = tones[tone] || tones.primary
-  const sizes = { sm: '6px 10px', md: '9px 16px', lg: '11px 20px' }
+const buttonTones = {
+  primary: 'border-pine bg-pine text-white',
+  accent: 'border-sage bg-sage text-white',
+  success: 'border-success bg-success text-white',
+  danger: 'border-danger bg-danger text-white',
+  outline: 'border-line bg-surface text-ink',
+  ghost: 'border-transparent bg-transparent text-body',
+}
+
+const buttonSizes = {
+  sm: 'px-2.5 py-1.5',
+  md: 'px-4 py-[9px]',
+  lg: 'px-5 py-[11px]',
+}
+
+export function Button({ children, onClick, tone = 'primary', size = 'md', disabled, type = 'button', icon, style, className }) {
   return (
     <button
       type={type}
       disabled={disabled}
       onClick={onClick}
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 8,
-        padding: sizes[size] || sizes.md,
-        borderRadius: radii.md,
-        background: t.bg,
-        color: t.fg,
-        border: `1px solid ${t.border}`,
-        fontSize: 13,
-        fontWeight: 600,
-        fontFamily: font.sans,
-        cursor: disabled ? 'not-allowed' : 'pointer',
-        opacity: disabled ? 0.55 : 1,
-        transition: 'filter .15s ease, box-shadow .15s ease',
-        ':hover': { filter: 'brightness(1.05)' },
-        ...style,
-      }}
+      className={cn(
+        'inline-flex cursor-pointer items-center justify-center gap-2 rounded-md border text-[13px] font-semibold font-sans transition-[filter,box-shadow] hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-55',
+        buttonTones[tone] || buttonTones.primary,
+        buttonSizes[size] || buttonSizes.md,
+        className,
+      )}
+      style={style}
     >
       {icon}
       {children}
@@ -182,55 +157,35 @@ export function Button({ children, onClick, tone = 'primary', size = 'md', disab
   )
 }
 
-export function Input({ label, value, onChange, placeholder, type = 'text', style, icon }) {
+export function Input({ label, value, onChange, placeholder, type = 'text', style, className, icon }) {
   return (
-    <label style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1, minWidth: 180, ...style }}>
-      {label && <span style={{ fontSize: 12, fontWeight: 600, color: colors.textSoft }}>{label}</span>}
-      <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-        {icon && <span style={{ position: 'absolute', left: 10, color: colors.muted, display: 'inline-flex' }}>{icon}</span>}
+    <label className={cn('flex min-w-[180px] flex-1 flex-col gap-1.5', className)} style={style}>
+      {label && <span className="text-xs font-semibold text-body">{label}</span>}
+      <div className="relative flex items-center">
+        {icon && <span className="absolute left-2.5 inline-flex text-muted">{icon}</span>}
         <input
           type={type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          style={{
-            width: '100%',
-            padding: icon ? '9px 12px 9px 34px' : '9px 12px',
-            borderRadius: radii.md,
-            border: `1px solid ${colors.border}`,
-            background: colors.surface,
-            color: colors.text,
-            fontSize: 13,
-            fontFamily: font.sans,
-            outline: 'none',
-            transition: 'border-color .15s ease, box-shadow .15s ease',
-            ':focus': { borderColor: colors.primary, boxShadow: `0 0 0 3px ${colors.primary}22` },
-          }}
+          className={cn(
+            'w-full rounded-md border border-line bg-surface py-[9px] pr-3 text-[13px] font-sans text-ink outline-none transition-[border-color,box-shadow] focus:border-pine focus:ring-[3px] focus:ring-pine/15',
+            icon ? 'pl-[34px]' : 'pl-3',
+          )}
         />
       </div>
     </label>
   )
 }
 
-export function Select({ label, value, onChange, options, style }) {
+export function Select({ label, value, onChange, options, style, className }) {
   return (
-    <label style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 150, ...style }}>
-      {label && <span style={{ fontSize: 12, fontWeight: 600, color: colors.textSoft }}>{label}</span>}
+    <label className={cn('flex min-w-[150px] flex-col gap-1.5', className)} style={style}>
+      {label && <span className="text-xs font-semibold text-body">{label}</span>}
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        style={{
-          padding: '9px 12px',
-          borderRadius: radii.md,
-          border: `1px solid ${colors.border}`,
-          background: colors.surface,
-          color: colors.text,
-          fontSize: 13,
-          fontFamily: font.sans,
-          outline: 'none',
-          cursor: 'pointer',
-          ':focus': { borderColor: colors.primary },
-        }}
+        className="cursor-pointer rounded-md border border-line bg-surface px-3 py-[9px] text-[13px] font-sans text-ink outline-none focus:border-pine"
       >
         {options.map((o) => (
           <option key={o.value} value={o.value}>
@@ -242,6 +197,22 @@ export function Select({ label, value, onChange, options, style }) {
   )
 }
 
+export function Textarea({ label, value, onChange, placeholder, rows = 4, hint, style, className }) {
+  return (
+    <label className={cn('flex flex-col gap-1.5', className)} style={style}>
+      {label && <span className="text-xs font-semibold text-body">{label}</span>}
+      <textarea
+        value={value}
+        rows={rows}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="w-full resize-y rounded-md border border-line bg-surface px-3 py-[9px] text-[13px] font-sans leading-[1.6] text-ink outline-none transition-[border-color,box-shadow] focus:border-pine focus:ring-[3px] focus:ring-pine/15"
+      />
+      {hint && <span className="text-[11.5px] text-muted">{hint}</span>}
+    </label>
+  )
+}
+
 export function Toggle({ checked, onChange, label }) {
   return (
     <button
@@ -249,42 +220,15 @@ export function Toggle({ checked, onChange, label }) {
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 10,
-        background: 'transparent',
-        border: 'none',
-        cursor: 'pointer',
-        fontFamily: font.sans,
-        color: colors.text,
-        fontSize: 13,
-        padding: 0,
-        textAlign: 'left',
-      }}
+      className="flex cursor-pointer items-center gap-2.5 border-none bg-transparent p-0 text-left text-[13px] font-sans text-ink"
     >
       <span
-        style={{
-          width: 38,
-          height: 21,
-          borderRadius: radii.round,
-          background: checked ? colors.success : colors.border,
-          position: 'relative',
-          transition: 'background .2s ease',
-        }}
+        className="relative h-[21px] w-[38px] rounded-full transition-[background] duration-200"
+        style={{ background: checked ? colors.success : colors.border }}
       >
         <span
-          style={{
-            position: 'absolute',
-            top: 2,
-            left: checked ? 19 : 2,
-            width: 17,
-            height: 17,
-            borderRadius: '50%',
-            background: '#fff',
-            boxShadow: shadows.card,
-            transition: 'left .2s ease',
-          }}
+          className="absolute top-0.5 size-[17px] rounded-full bg-white shadow-card transition-[left] duration-200"
+          style={{ left: checked ? 19 : 2 }}
         />
       </span>
       {label}
@@ -293,32 +237,17 @@ export function Toggle({ checked, onChange, label }) {
 }
 
 export function Toast({ message, tone = 'success', onClose }) {
-  const t = tone === 'success' ? { bg: colors.success, icon: '#fff' } : { bg: colors.danger, icon: '#fff' }
   return (
     <div
-      style={{
-        position: 'fixed',
-        bottom: 24,
-        right: 24,
-        zIndex: 1000,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 10,
-        padding: '12px 16px',
-        borderRadius: radii.md,
-        background: t.bg,
-        color: t.icon,
-        boxShadow: shadows.pop,
-        fontSize: 13,
-        fontWeight: 600,
-        fontFamily: font.sans,
-        animation: 'toastIn .25s ease',
-      }}
+      className={cn(
+        'fixed right-6 bottom-6 z-[1000] flex items-center gap-2.5 rounded-md px-4 py-3 text-[13px] font-semibold font-sans text-white shadow-pop animate-toast-in',
+        tone === 'success' ? 'bg-success' : 'bg-danger',
+      )}
     >
-      <IconCheck size={16} color={t.icon} />
+      <IconCheck size={16} color="#fff" />
       <span>{message}</span>
-      <button onClick={onClose} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: t.icon, display: 'inline-flex', padding: 2 }}>
-        <IconX size={14} color={t.icon} />
+      <button onClick={onClose} className="inline-flex cursor-pointer border-none bg-transparent p-0.5 text-white">
+        <IconX size={14} color="#fff" />
       </button>
     </div>
   )
@@ -326,53 +255,21 @@ export function Toast({ message, tone = 'success', onClose }) {
 
 export function PageHeader({ title, subtitle, actions }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16, marginBottom: 22, flexWrap: 'wrap' }}>
+    <div className="mb-[22px] flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: colors.text, letterSpacing: '-0.3px' }}>{title}</h2>
-        {subtitle && <p style={{ margin: '5px 0 0', fontSize: 13, color: colors.muted }}>{subtitle}</p>}
+        <h2 className="m-0 text-[22px] font-extrabold tracking-[-0.3px] text-ink">{title}</h2>
+        {subtitle && <p className="mt-[5px] mb-0 text-[13px] text-muted">{subtitle}</p>}
       </div>
-      {actions && <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>{actions}</div>}
+      {actions && <div className="flex flex-wrap gap-2.5">{actions}</div>}
     </div>
   )
 }
 
 export function EmptyState({ icon, text }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: '40px 0', color: colors.muted }}>
-      <span style={{ opacity: 0.6 }}>{icon || <IconSearch size={34} />}</span>
-      <span style={{ fontSize: 13 }}>{text}</span>
+    <div className="flex flex-col items-center gap-2.5 py-10 text-muted">
+      <span className="opacity-60">{icon || <IconSearch size={34} />}</span>
+      <span className="text-[13px]">{text}</span>
     </div>
   )
-}
-
-export const th = {
-  iconBtn: {
-    position: 'relative',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 38,
-    height: 38,
-    borderRadius: radii.md,
-    border: `1px solid ${colors.border}`,
-    background: colors.surface,
-    color: colors.textSoft,
-    cursor: 'pointer',
-    transition: 'background .15s ease',
-    ':hover': { background: colors.surfaceAlt },
-  },
-  chip: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: 8,
-    padding: '9px 14px',
-    borderRadius: radii.md,
-    border: `1px solid ${colors.border}`,
-    background: colors.surface,
-    color: colors.text,
-    fontSize: 13,
-    fontWeight: 600,
-    fontFamily: font.sans,
-    cursor: 'pointer',
-  },
 }

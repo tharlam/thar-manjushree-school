@@ -1,15 +1,36 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { useLanguage } from '../i18n.jsx'
 import { useAppStore } from '../store.jsx'
-import { colors, radii } from '../theme.js'
+import { colors } from '../theme.js'
+import { cn } from '../lib/cn.js'
 import { Card, CardHeader, StatCard, Badge, PageHeader, Button } from '../components/ui.jsx'
 import { IconMonks, IconClasses, IconFees, IconUser, IconShield, IconClock } from '../components/icons.jsx'
 import { classes as baseClasses, activities, events } from '../data/index.js'
 import { usdValue, formatUsd, formatAmount } from '../lib/currency.js'
 
+const activityLabels = {
+  act1: 'New monk admitted to Level 3',
+  act2: 'Monthly fee of Tenzin Dorje settled',
+  act3: 'Philosophy debate session scheduled',
+  act4: 'Donation of $1,200 received from sponsor',
+  act5: 'Attendance log for Level 4 completed',
+}
+
+const eventLabels = {
+  ev1: 'Monlam Prayer Festival',
+  ev2: 'Philosophy Debate Finals',
+  ev3: 'Parent-Teacher Meeting',
+  ev4: 'Annual Thangka Exhibition',
+}
+
+const tagLabels = {
+  tagReligious: 'Religious',
+  tagAcademic: 'Academic',
+  tagMeeting: 'Meeting',
+  tagCultural: 'Cultural',
+}
+
 export default function Dashboard() {
-  const { t } = useLanguage()
   const { monks: storeMonks, admissions, donations } = useAppStore()
 
   const totals = useMemo(() => {
@@ -22,10 +43,10 @@ export default function Dashboard() {
   }, [storeMonks, admissions, donations])
 
   const statDefs = [
-    { key: 'monks', label: t('dashboard.statMonks'), value: totals.totalMonks, delta: 4.2, color: colors.primary, icon: <IconMonks size={16} /> },
-    { key: 'classes', label: t('dashboard.statClasses'), value: totals.activeClasses, delta: 0, color: colors.accent, icon: <IconClasses size={16} /> },
-    { key: 'donations', label: t('dashboard.statDonations'), value: formatUsd(totals.donationTotal), delta: 12.5, color: colors.success, icon: <IconFees size={16} /> },
-    { key: 'admissions', label: t('dashboard.statAdmissions'), value: totals.pendingAdmissions, delta: 8.3, color: colors.info, icon: <IconUser size={16} /> },
+    { key: 'monks', label: 'Total Monks', value: totals.totalMonks, delta: 4.2, color: colors.primary, icon: <IconMonks size={16} /> },
+    { key: 'classes', label: 'Active Classes', value: totals.activeClasses, delta: 0, color: colors.accent, icon: <IconClasses size={16} /> },
+    { key: 'donations', label: 'Donations This Month', value: formatUsd(totals.donationTotal), delta: 12.5, color: colors.success, icon: <IconFees size={16} /> },
+    { key: 'admissions', label: 'Pending Admissions', value: totals.pendingAdmissions, delta: 8.3, color: colors.info, icon: <IconUser size={16} /> },
   ]
 
   const pendingQueue = admissions.filter((a) => a.status === 'pending').slice(0, 5)
@@ -35,120 +56,116 @@ export default function Dashboard() {
 
   return (
     <div>
-      <PageHeader title={t('dashboard.title')} subtitle={t('dashboard.subtitle')} />
+      <PageHeader title="Dashboard Overview" subtitle="A live snapshot of the monastic community" />
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: 14, marginBottom: 22 }}>
+      <div className="mb-[22px] grid grid-cols-[repeat(auto-fit,minmax(210px,1fr))] gap-3.5">
         {statDefs.map((s) => (
-          <StatCard key={s.key} label={s.label} value={s.value} delta={s.key === 'classes' ? undefined : s.delta} color={s.color} icon={s.icon} hint={s.key === 'classes' ? t('dashboard.vs') : undefined} />
+          <StatCard key={s.key} label={s.label} value={s.value} delta={s.key === 'classes' ? undefined : s.delta} color={s.color} icon={s.icon} hint={s.key === 'classes' ? 'vs last month' : undefined} />
         ))}
       </div>
 
-      <div className="dashboard-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 16, marginBottom: 16 }}>
+      <div className="dashboard-grid-2col mb-4 grid grid-cols-[1.4fr_1fr] gap-4">
         <Card pad={18}>
-          <CardHeader title={t('dashboard.enrollmentTitle')} />
-          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 10, height: 170, paddingTop: 8 }}>
+          <CardHeader title="Enrollment by Class" />
+          <div className="flex h-[170px] items-end gap-2.5 pt-2">
             {enrollment.map((c) => (
-              <div key={c.id} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, height: '100%', justifyContent: 'flex-end' }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: colors.textSoft }}>{c.students}</span>
+              <div key={c.id} className="flex h-full flex-1 flex-col items-center justify-end gap-1.5">
+                <span className="text-[11px] font-bold text-body">{c.students}</span>
                 <div
                   title={`${c.name}: ${c.students}`}
+                  className="w-full max-w-8 min-h-2 rounded-t-sm rounded-b-[2px]"
                   style={{
-                    width: '100%',
-                    maxWidth: 32,
                     height: `${(c.students / maxStudents) * 120}px`,
-                    minHeight: 8,
-                    borderRadius: '6px 6px 2px 2px',
                     background: `linear-gradient(180deg, ${c.color}, ${c.color}99)`,
                   }}
                 />
-                <span style={{ fontSize: 9, color: colors.muted, whiteSpace: 'nowrap', transform: 'rotate(-40deg)', transformOrigin: 'top left' }}>{c.name}</span>
+                <span className="origin-top-left rotate-[-40deg] text-[9px] whitespace-nowrap text-muted">{c.name}</span>
               </div>
             ))}
           </div>
         </Card>
 
         <Card pad={18}>
-          <CardHeader title={t('dashboard.statAdmissions')} subtitle={t('dashboard.clickHint')} />
+          <CardHeader title="Pending Admissions" subtitle="Click any card to preview details" />
           {pendingQueue.length === 0 ? (
-            <p style={{ margin: 0, fontSize: 13, color: colors.muted }}>{t('common.noResults')}</p>
+            <p className="m-0 text-[13px] text-muted">No records found.</p>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div className="flex flex-col gap-2.5">
               {pendingQueue.map((a) => (
-                <div key={a.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 11px', borderRadius: radii.md, background: colors.surfaceAlt, border: `1px solid ${colors.border}` }}>
-                  <span style={{ width: 30, height: 30, borderRadius: '50%', background: colors.warningSoft, color: colors.warning, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 800 }}>
+                <div key={a.id} className="flex items-center gap-2.5 rounded-md border border-line bg-surface-alt px-[11px] py-[9px]">
+                  <span className="inline-flex size-[30px] items-center justify-center rounded-full bg-warning-soft text-[10px] font-extrabold text-warning">
                     {a.name.split(' ').map((p) => p[0]).slice(0, 2).join('').toUpperCase()}
                   </span>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: colors.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.name}</p>
-                    <p style={{ margin: '2px 0 0', fontSize: 11, color: colors.muted }}>{a.classRequested} · {a.submittedAt}</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="m-0 overflow-hidden text-[13px] font-bold text-ellipsis whitespace-nowrap text-ink">{a.name}</p>
+                    <p className="mt-0.5 mb-0 text-[11px] text-muted">{a.classRequested} · {a.submittedAt}</p>
                   </div>
-                  <Badge tone="warning" dot>{t('statuses.pending')}</Badge>
+                  <Badge tone="warning" dot>Pending</Badge>
                 </div>
               ))}
-              <Link to="/admin/monks" style={{ textDecoration: 'none' }}>
-                <Button tone="outline" style={{ width: '100%' }}>{t('common.viewAll')}</Button>
+              <Link to="/admin/monks" className="no-underline">
+                <Button tone="outline" className="w-full">View all</Button>
               </Link>
             </div>
           )}
         </Card>
       </div>
 
-      <div className="dashboard-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 16, marginBottom: 16 }}>
+      <div className="dashboard-grid-2col mb-4 grid grid-cols-[1.4fr_1fr] gap-4">
         <Card pad={18}>
-          <CardHeader title={t('feesPage.donationTitle')} subtitle={t('feesPage.recent')} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, maxHeight: 260, overflowY: 'auto' }}>
+          <CardHeader title="Donation Records" subtitle="Recent Transactions" />
+          <div className="flex max-h-[260px] flex-col gap-2.5 overflow-y-auto">
             {recentDonations.map((d) => (
-              <div key={d.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '9px 12px', borderRadius: radii.md, background: colors.surfaceAlt, border: `1px solid ${colors.border}` }}>
-                <span style={{ width: 32, height: 32, borderRadius: radii.md, background: colors.successSoft, color: colors.success, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div key={d.id} className="flex items-center gap-3 rounded-md border border-line bg-surface-alt px-3 py-[9px]">
+                <span className="inline-flex size-8 items-center justify-center rounded-md bg-success-soft text-success">
                   <IconFees size={15} />
                 </span>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: colors.text }}>{d.name}</p>
-                  <p style={{ margin: '2px 0 0', fontSize: 11.5, color: colors.muted }}>{d.date} · {d.note || t('feesPage.donation')}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="m-0 text-[13px] font-bold text-ink">{d.name}</p>
+                  <p className="mt-0.5 mb-0 text-[11.5px] text-muted">{d.date} · {d.note || 'Donation'}</p>
                 </div>
-                <span style={{ fontSize: 14, fontWeight: 800, color: colors.success }}>{formatAmount(d.amount, d.currency)}</span>
+                <span className="text-[14px] font-extrabold text-success">{formatAmount(d.amount, d.currency)}</span>
               </div>
             ))}
-            {recentDonations.length === 0 && <p style={{ margin: 0, fontSize: 13, color: colors.muted }}>{t('common.noResults')}</p>}
+            {recentDonations.length === 0 && <p className="m-0 text-[13px] text-muted">No records found.</p>}
           </div>
         </Card>
 
         <Card pad={18}>
-          <CardHeader title={t('dashboard.feeTitle')} subtitle={`${t('dashboard.collected')} vs ${t('dashboard.outstanding')}`} />
-          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, height: 120 }}>
-            <div style={{ flex: 1 }}>
-              <div style={{ height: 90, borderRadius: radii.md, background: 'linear-gradient(180deg, rgba(46,125,50,0.85), rgba(46,125,50,0.35))', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: 8 }}>
-                <span style={{ fontSize: 12, fontWeight: 800, color: '#fff' }}>{formatUsd(totals.donationTotal + donations.filter((x) => x.type === 'fee').reduce((s, x) => s + usdValue(x.amount, x.currency), 0))}</span>
+          <CardHeader title="Fee Collection Overview" subtitle="Collected vs Outstanding" />
+          <div className="flex h-[120px] items-end gap-3">
+            <div className="flex-1">
+              <div className="flex h-[90px] items-end justify-center rounded-md bg-linear-to-b from-[rgba(46,125,50,0.85)] to-[rgba(46,125,50,0.35)] pb-2">
+                <span className="text-[12px] font-extrabold text-white">{formatUsd(totals.donationTotal + donations.filter((x) => x.type === 'fee').reduce((s, x) => s + usdValue(x.amount, x.currency), 0))}</span>
               </div>
-              <p style={{ margin: '6px 0 0', textAlign: 'center', fontSize: 11, color: colors.muted }}>{t('dashboard.collected')}</p>
+              <p className="mt-1.5 mb-0 text-center text-[11px] text-muted">Collected</p>
             </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ height: 45, borderRadius: radii.md, background: 'linear-gradient(180deg, rgba(198,40,40,0.8), rgba(198,40,40,0.35))', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: 8 }}>
-                <span style={{ fontSize: 12, fontWeight: 800, color: '#fff' }}>{formatUsd(totals.outstanding)}</span>
+            <div className="flex-1">
+              <div className="flex h-[45px] items-end justify-center rounded-md bg-linear-to-b from-[rgba(198,40,40,0.8)] to-[rgba(198,40,40,0.35)] pb-2">
+                <span className="text-[12px] font-extrabold text-white">{formatUsd(totals.outstanding)}</span>
               </div>
-              <p style={{ margin: '6px 0 0', textAlign: 'center', fontSize: 11, color: colors.muted }}>{t('dashboard.outstanding')}</p>
+              <p className="mt-1.5 mb-0 text-center text-[11px] text-muted">Outstanding</p>
             </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 16, padding: '10px 12px', borderRadius: radii.md, background: '#F0E6F8', border: `1px solid ${colors.border}` }}>
+          <div className="mt-4 flex items-center gap-2.5 rounded-md border border-line bg-[#F0E6F8] px-3 py-2.5">
             <IconShield size={16} color={colors.purple} />
-            <span style={{ fontSize: 12.5, color: colors.textSoft, flex: 1 }}>
-              {t('feesPage.statSponsorships')}: <b style={{ color: colors.purple }}>{storeMonks.filter((m) => m.sponsor).length}</b>
+            <span className="flex-1 text-[12.5px] text-body">
+              Active Sponsorships: <b className="text-purple">{storeMonks.filter((m) => m.sponsor).length}</b>
             </span>
-            <Link to="/admin/fees" style={{ textDecoration: 'none', fontSize: 12.5, fontWeight: 700, color: colors.primary }}>{t('common.viewAll')} →</Link>
           </div>
         </Card>
       </div>
 
-      <div className="dashboard-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+      <div className="dashboard-grid-2col mb-4 grid grid-cols-2 gap-4">
         <Card pad={18}>
-          <CardHeader title={t('dashboard.activityTitle')} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <CardHeader title="Recent Activity" />
+          <div className="flex flex-col gap-2.5">
             {activities.map((a, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px', borderRadius: radii.md, background: colors.surfaceAlt, border: `1px solid ${colors.border}` }}>
-                <span style={{ width: 8, height: 8, borderRadius: '50%', background: i < 2 ? colors.primary : colors.border, flexShrink: 0 }} />
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: colors.text }}>{t(`dashboard.${a.key}`)}</p>
-                  <span style={{ fontSize: 11, color: colors.muted }}>{a.time}</span>
+              <div key={i} className="flex items-center gap-2.5 rounded-md border border-line bg-surface-alt px-3 py-[9px]">
+                <span className={cn('size-2 shrink-0 rounded-full', i < 2 ? 'bg-pine' : 'bg-line')} />
+                <div className="min-w-0 flex-1">
+                  <p className="m-0 text-[13px] font-semibold text-ink">{activityLabels[a.key] || a.key}</p>
+                  <span className="text-[11px] text-muted">{a.time}</span>
                 </div>
               </div>
             ))}
@@ -156,19 +173,19 @@ export default function Dashboard() {
         </Card>
 
         <Card pad={18}>
-          <CardHeader title={t('dashboard.eventsTitle')} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <CardHeader title="Upcoming Events" />
+          <div className="flex flex-col gap-2.5">
             {events.map((e, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '9px 12px', borderRadius: radii.md, background: colors.surfaceAlt, border: `1px solid ${colors.border}` }}>
-                <span style={{ width: 38, height: 38, borderRadius: radii.md, background: colors.primarySoft, color: colors.primary, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, flexShrink: 0 }}>
+              <div key={i} className="flex items-center gap-3 rounded-md border border-line bg-surface-alt px-3 py-[9px]">
+                <span className="inline-flex size-[38px] shrink-0 items-center justify-center rounded-md bg-pine-soft text-[11px] font-extrabold text-pine">
                   {e.date.split(' ')[1] || e.date.split(' ')[0]}
                 </span>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: colors.text }}>{t(`dashboard.${e.key}`)}</p>
-                  <span style={{ fontSize: 11, color: colors.muted }}>{e.date}</span>
+                <div className="min-w-0 flex-1">
+                  <p className="m-0 text-[13px] font-bold text-ink">{eventLabels[e.key] || e.key}</p>
+                  <span className="text-[11px] text-muted">{e.date}</span>
                 </div>
-                <span style={{ padding: '3px 8px', borderRadius: radii.round, background: colors.warningSoft, color: colors.warning, fontSize: 10, fontWeight: 700, whiteSpace: 'nowrap' }}>
-                  {t(`dashboard.${e.tagKey}`)}
+                <span className="rounded-full bg-warning-soft px-2 py-[3px] text-[10px] font-bold whitespace-nowrap text-warning">
+                  {tagLabels[e.tagKey] || e.tagKey}
                 </span>
               </div>
             ))}
@@ -176,8 +193,8 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      <p style={{ marginTop: 18, fontSize: 11, color: colors.muted, display: 'flex', alignItems: 'center', gap: 6 }}>
-        <IconClock size={12} /> Thar Manjushree School · {t('app.admin')} · {t('dashboard.statAdmissions')}: {totals.pendingAdmissions}
+      <p className="mt-4.5 flex items-center gap-1.5 text-[11px] text-muted">
+        <IconClock size={12} /> Thar Manjushree School · Admin Portal · Pending Admissions: {totals.pendingAdmissions}
       </p>
     </div>
   )

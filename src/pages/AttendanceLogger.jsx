@@ -1,15 +1,24 @@
 import { useMemo, useState } from 'react'
 import { useLanguage } from '../i18n.jsx'
-import { colors, font, radii } from '../theme.js'
+import { cn } from '../lib/cn.js'
 import { Card, CardHeader, Badge, Button, Select, PageHeader } from '../components/ui.jsx'
 import { IconAttendance, IconCheck, IconX, IconClock } from '../components/icons.jsx'
 import { monks, classes } from '../data/index.js'
 
 const statusOpts = [
-  { key: 'present', icon: <IconCheck size={15} />, color: colors.success, bg: colors.successSoft },
-  { key: 'absent', icon: <IconX size={15} />, color: colors.danger, bg: colors.dangerSoft },
-  { key: 'late', icon: <IconClock size={15} />, color: colors.warning, bg: colors.warningSoft },
+  { key: 'present', icon: <IconCheck size={15} />, tone: 'success' },
+  { key: 'absent', icon: <IconX size={15} />, tone: 'danger' },
+  { key: 'late', icon: <IconClock size={15} />, tone: 'warning' },
 ]
+
+const chipTone = {
+  success: 'border-success bg-success-soft text-success',
+  danger: 'border-danger bg-danger-soft text-danger',
+  warning: 'border-warning bg-warning-soft text-warning',
+}
+const borderTone = { success: 'border-l-success', danger: 'border-l-danger', warning: 'border-l-warning' }
+const iconTone = { success: 'bg-success-soft text-success', danger: 'bg-danger-soft text-danger', warning: 'bg-warning-soft text-warning' }
+const dotTone = { success: 'bg-success', danger: 'bg-danger', warning: 'bg-warning' }
 
 export default function AttendanceLogger() {
   const { t } = useLanguage()
@@ -59,21 +68,10 @@ export default function AttendanceLogger() {
       <button
         type="button"
         onClick={() => setStatus(rec.id, key)}
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 6,
-          padding: '5px 12px',
-          borderRadius: radii.round,
-          border: `1px solid ${isActive ? o.color : colors.border}`,
-          background: isActive ? o.bg : colors.surface,
-          color: isActive ? o.color : colors.muted,
-          fontSize: 12,
-          fontWeight: 700,
-          cursor: 'pointer',
-          fontFamily: font.sans,
-          transition: 'all .15s ease',
-        }}
+        className={cn(
+          'inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-[5px] text-[12px] font-bold font-sans transition-all',
+          isActive ? chipTone[o.tone] : 'border-line bg-surface text-muted',
+        )}
       >
         {o.icon}
         {t(`attendancePage.${key}`)}
@@ -90,8 +88,8 @@ export default function AttendanceLogger() {
     <div>
       <PageHeader title={t('attendancePage.title')} subtitle={t('attendancePage.subtitle')} />
 
-      <Card pad={18} style={{ marginBottom: 16 }}>
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'flex-end' }}>
+      <Card pad={18} className="mb-4">
+        <div className="flex flex-wrap items-end gap-3">
           <Select
             label={t('attendancePage.selectDate')}
             value={date}
@@ -104,7 +102,7 @@ export default function AttendanceLogger() {
             onChange={setClassFilter}
             options={[{ value: 'all', label: t('common.all') }, ...classes.map((c) => ({ value: c.id, label: c.name }))]}
           />
-          <div style={{ display: 'flex', gap: 8, marginLeft: 'auto', flexWrap: 'wrap' }}>
+          <div className="ml-auto flex flex-wrap gap-2">
             <Button tone="success" icon={<IconCheck size={15} />} onClick={() => markAll('present')}>
               {t('attendancePage.markAllPresent')}
             </Button>
@@ -114,43 +112,43 @@ export default function AttendanceLogger() {
           </div>
         </div>
 
-        <p style={{ margin: '14px 2px 0', fontSize: 12, color: colors.muted }}>{t('attendancePage.legend')}</p>
+        <p className="mt-3.5 mx-0.5 mb-0 text-[12px] text-muted">{t('attendancePage.legend')}</p>
       </Card>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 14, marginBottom: 16 }}>
+      <div className="mb-4 grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-3.5">
         {statusOpts.map((o) => (
-          <Card key={o.key} pad={16} style={{ borderLeft: `4px solid ${o.color}`, display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ width: 36, height: 36, borderRadius: radii.md, background: o.bg, color: o.color, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Card key={o.key} pad={16} className={cn('flex items-center gap-3 border-l-4', borderTone[o.tone])}>
+            <span className={cn('inline-flex size-9 items-center justify-center rounded-md', iconTone[o.tone])}>
               {o.icon}
             </span>
             <div>
-              <p style={{ margin: 0, fontSize: 24, fontWeight: 800, color: colors.text }}>{counts[o.key]}</p>
-              <p style={{ margin: 0, fontSize: 11.5, color: colors.muted }}>
+              <p className="m-0 text-[24px] font-extrabold text-ink">{counts[o.key]}</p>
+              <p className="m-0 text-[11.5px] text-muted">
                 {o.key === 'present' ? t('attendancePage.presentCount') : o.key === 'absent' ? t('attendancePage.absentCount') : t('attendancePage.lateCount')}
               </p>
             </div>
           </Card>
         ))}
-        <Card pad={16} style={{ borderLeft: `4px solid ${colors.purple}`, display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ width: 36, height: 36, borderRadius: radii.md, background: '#F0E6F8', color: colors.purple, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Card pad={16} className="flex items-center gap-3 border-l-4 border-l-purple">
+          <span className="inline-flex size-9 items-center justify-center rounded-md bg-[#F0E6F8] text-purple">
             <IconAttendance size={17} />
           </span>
           <div>
-            <p style={{ margin: 0, fontSize: 24, fontWeight: 800, color: colors.text }}>{rate}%</p>
-            <p style={{ margin: 0, fontSize: 11.5, color: colors.muted }}>{t('attendancePage.rate')}</p>
+            <p className="m-0 text-[24px] font-extrabold text-ink">{rate}%</p>
+            <p className="m-0 text-[11.5px] text-muted">{t('attendancePage.rate')}</p>
           </div>
         </Card>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 16 }}>
+      <div className="grid grid-cols-[2fr_1fr] gap-4">
         <Card pad={18}>
           <CardHeader title={t('attendancePage.logTitle')} subtitle={t('attendancePage.snapshot')} />
-          <div style={{ overflowX: 'auto', borderRadius: radii.md, border: `1px solid ${colors.border}` }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, minWidth: 640 }}>
+          <div className="overflow-x-auto rounded-md border border-line">
+            <table className="w-full min-w-[640px] border-collapse text-[13px]">
               <thead>
-                <tr style={{ background: colors.surfaceAlt }}>
+                <tr className="bg-surface-alt">
                   {[t('common.name'), t('common.className'), t('attendancePage.present'), t('attendancePage.absent'), t('attendancePage.late'), t('attendancePage.time')].map((h) => (
-                    <th key={h} style={{ textAlign: 'left', padding: '10px 12px', fontSize: 11, fontWeight: 700, color: colors.muted, textTransform: 'uppercase', letterSpacing: '0.4px' }}>
+                    <th key={h} className="px-3 py-2.5 text-left text-[11px] font-bold tracking-[0.4px] text-muted uppercase">
                       {h}
                     </th>
                   ))}
@@ -158,37 +156,37 @@ export default function AttendanceLogger() {
               </thead>
               <tbody>
                 {filtered.map((r) => (
-                  <tr key={r.id} style={{ borderTop: `1px solid ${colors.border}`, background: r.status === 'absent' ? colors.dangerSoft : colors.surface }}>
-                    <td style={{ padding: '10px 12px', fontWeight: 600, color: colors.text, whiteSpace: 'nowrap' }}>{r.name}</td>
-                    <td style={{ padding: '10px 12px', color: colors.textSoft }}>{classLabel(r.classId)}</td>
+                  <tr key={r.id} className={cn('border-t border-line', r.status === 'absent' ? 'bg-danger-soft' : 'bg-surface')}>
+                    <td className="px-3 py-2.5 font-semibold whitespace-nowrap text-ink">{r.name}</td>
+                    <td className="px-3 py-2.5 text-body">{classLabel(r.classId)}</td>
                     {['present', 'absent', 'late'].map((k) => (
-                      <td key={k} style={{ padding: '10px 8px' }}>{statusChip(r.status, k, r)}</td>
+                      <td key={k} className="px-2 py-2.5">{statusChip(r.status, k, r)}</td>
                     ))}
-                    <td style={{ padding: '10px 12px', color: colors.muted, fontSize: 12, whiteSpace: 'nowrap' }}>{r.time}</td>
+                    <td className="px-3 py-2.5 text-[12px] whitespace-nowrap text-muted">{r.time}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <p style={{ margin: '12px 2px 0', fontSize: 12, color: colors.muted }}>
+          <p className="mt-3 mx-0.5 mb-0 text-[12px] text-muted">
             {filtered.length} {t('attendancePage.recorded')}
           </p>
         </Card>
 
         <Card pad={18}>
           <CardHeader title={t('attendancePage.logTitle')} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div className="flex flex-col gap-2.5">
             {log.length === 0 && (
-              <p style={{ margin: 0, fontSize: 12.5, color: colors.muted }}>{t('common.noResults')}</p>
+              <p className="m-0 text-[12.5px] text-muted">{t('common.noResults')}</p>
             )}
             {log.slice().reverse().slice(0, 14).map((l, i) => {
               const m = monks.find((x) => x.id === l.monk)
               const o = statusOpts.find((s) => s.key === l.status)
               return (
-                <div key={`${l.id}-${i}`} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: radii.sm, background: colors.surfaceAlt, border: `1px solid ${colors.border}` }}>
-                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: o.color, flexShrink: 0 }} />
-                  <span style={{ flex: 1, fontSize: 12.5, color: colors.text }}>{m ? m.name : l.monk}</span>
-                  <Badge tone={o.color === colors.success ? 'success' : o.color === colors.danger ? 'danger' : 'warning'}>{t(`attendancePage.${l.status}`)}</Badge>
+                <div key={`${l.id}-${i}`} className="flex items-center gap-2.5 rounded-sm border border-line bg-surface-alt px-2.5 py-2">
+                  <span className={cn('size-2 shrink-0 rounded-full', dotTone[o.tone])} />
+                  <span className="flex-1 text-[12.5px] text-ink">{m ? m.name : l.monk}</span>
+                  <Badge tone={o.tone}>{t(`attendancePage.${l.status}`)}</Badge>
                 </div>
               )
             })}

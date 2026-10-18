@@ -1,5 +1,6 @@
 import { useField, PageHero, Section } from './shared.jsx'
-import { colors, radii } from '../../theme.js'
+import { colors } from '../../theme.js'
+import { CardEyebrow } from '../../components/cards.jsx'
 import { useLanguage } from '../../i18n.jsx'
 
 const dayRows = [
@@ -26,34 +27,27 @@ export default function Schedule() {
       <PageHero title={introTitle} subtitle={introBody} kicker={t('schedulePage.title')} />
 
       <Section>
-        <div style={{ display: 'flex', flexDirection: 'column', maxWidth: 760, margin: '0 auto', gap: 10 }}>
-          <div className="schedule-header" style={{ display: 'grid', gridTemplateColumns: '110px 1fr', gap: 12, padding: '0 4px 6px', fontSize: 11, fontWeight: 800, letterSpacing: '1px', textTransform: 'uppercase', color: colors.muted }}>
+        <div className="mx-auto flex max-w-[760px] flex-col">
+          <div className="schedule-header grid grid-cols-[120px_1fr] gap-3.5 border-b border-line pb-2 text-[11px] font-extrabold tracking-[1.4px] text-muted uppercase">
             <span>{t('schedulePage.time')}</span>
             <span>{t('schedulePage.activity')}</span>
           </div>
-          {dayRows.map((row, i) => (
-            <div
-              key={row.activityKey}
-              className="schedule-row"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '110px 1fr',
-                gap: 12,
-                alignItems: 'center',
-                padding: '13px 16px',
-                borderRadius: radii.md,
-                background: colors.surface,
-                border: `1px solid ${colors.border}`,
-                borderLeft: `4px solid ${i % 2 === 0 ? colors.primary : colors.accent}`,
-              }}
-            >
-              <span style={{ fontSize: 13, fontWeight: 800, color: colors.primary, whiteSpace: 'nowrap' }}>{row.time}</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, fontWeight: 600, color: colors.text }}>
-                <span style={{ fontSize: 17 }}>{row.icon}</span>
-                {t(`schedulePage.${row.activityKey}`)}
-              </span>
-            </div>
-          ))}
+          {dayRows.map((row, i) => {
+            const accent = i % 2 === 0 ? colors.primary : colors.accent
+            return (
+              <div
+                key={row.activityKey}
+                className="schedule-row grid grid-cols-[120px_1fr] items-center gap-3.5 border-b border-line py-[15px]"
+              >
+                <span className="text-[12.5px] font-extrabold tracking-[0.6px] whitespace-nowrap" style={{ color: accent }}>{row.time}</span>
+                <span className="flex items-center gap-3 text-sm font-semibold text-ink">
+                  <span className="text-[17px]">{row.icon}</span>
+                  {t(`schedulePage.${row.activityKey}`)}
+                </span>
+              </div>
+            )
+          })}
+          <CardEyebrow className="mt-5">A Day Begins Before Dawn</CardEyebrow>
         </div>
       </Section>
     </div>
