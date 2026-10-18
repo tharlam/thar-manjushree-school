@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
+import RouteFallback from '../components/RouteFallback.jsx'
 import { useAdminAuth } from '../auth/AdminAuth.jsx'
 import { useLanguage } from '../i18n.jsx'
 import { cn } from '../lib/cn.js'
@@ -304,7 +305,9 @@ export default function DashboardLayout() {
         </header>
 
         <main className="flex-1 overflow-auto p-6">
-          <Outlet />
+          <Suspense fallback={<RouteFallback />}>
+            <Outlet />
+          </Suspense>
         </main>
       </div>
     </div>

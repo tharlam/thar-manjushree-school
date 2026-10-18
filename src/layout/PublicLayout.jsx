@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useLanguage } from '../i18n.jsx'
 import { cn } from '../lib/cn.js'
 import { IconChevron, IconX } from '../components/icons.jsx'
+import RouteFallback from '../components/RouteFallback.jsx'
 
 const navItems = [
   { path: '/', key: 'site.nav.home', end: true },
@@ -346,7 +347,9 @@ export default function PublicLayout() {
       </header>
 
       <main className="flex-1">
-        <Outlet />
+        <Suspense fallback={<RouteFallback />}>
+          <Outlet />
+        </Suspense>
       </main>
 
       <footer className="bg-ink text-[#EAF6EE]">
