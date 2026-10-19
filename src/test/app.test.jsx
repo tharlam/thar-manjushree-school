@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import App from '../App.jsx'
 
 function renderAt(hash) {
@@ -7,7 +7,10 @@ function renderAt(hash) {
   return render(<App />)
 }
 
-afterEach(cleanup)
+afterEach(() => {
+  cleanup()
+  window.localStorage.clear()
+})
 
 describe('public routing', () => {
   it('renders the home page at the root route', async () => {
@@ -71,5 +74,33 @@ describe('admissions form', () => {
     expect(screen.getByText('Guardian name is required')).toBeInTheDocument()
     expect(screen.getByText('Age is required')).toBeInTheDocument()
     expect(screen.getByText('Phone is required')).toBeInTheDocument()
+  })
+})
+
+describe('staff login', () => {
+  it('opens the dashboard without an email or password', async () => {
+    renderAt('#/admin/login')
+
+    fireEvent.click(await screen.findByRole('button', { name: /enter staff area/i }))
+
+    await waitFor(() => expect(window.location.hash).toBe('#/admin'))
+    expect(screen.queryByRole('button', { name: /enter staff area/i })).not.toBeInTheDocument()
+  })
+
+  it('sends unauthenticated visitors to the login screen', async () => {
+    renderAt('#/admin')
+
+    await waitFor(() => expect(window.location.hash).toBe('#/admin/login'))
+  })
+
+  it('keeps staff signed in across a reload', async () => {
+    window.localStorage.setItem(
+      'tm.staff.session',
+      JSON.stringify({ name: 'Staff Member', role: 'staff', signedInAt: new Date().toISOString() }),
+    )
+
+    renderAt('#/admin')
+
+    await waitFor(() => expect(window.location.hash).toBe('#/admin'))
   })
 })
