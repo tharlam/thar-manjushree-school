@@ -34,8 +34,8 @@ export default function AdminArea() {
     <AdminAuthProvider>
       <Suspense fallback={<RouteFallback />}>
         <Routes>
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin" element={<RequireAuth><DashboardLayout /></RequireAuth>}>
+          <Route path="login" element={<AdminLogin />} />
+          <Route element={<RequireAuth><DashboardLayout /></RequireAuth>}>
             <Route index element={<Dashboard />} />
             <Route path="monks" element={<MonksRoster />} />
             <Route path="attendance" element={<AttendanceLogger />} />
