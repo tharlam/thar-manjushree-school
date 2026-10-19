@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { useLanguage } from '../../i18n.jsx'
 import { colors } from '../../theme.js'
 import { cn } from '../../lib/cn.js'
-import { PageHero, Section } from './shared.jsx'
+import { PageHero, Section, usePage } from './shared.jsx'
 import { CardEyebrow, OpenCard } from '../../components/cards.jsx'
 import { allEvents } from '../../data/index.js'
 
@@ -13,32 +13,43 @@ const tagTone = {
   tagCultural: colors.teal,
 }
 
-const tagLabels = {
-  tagReligious: 'Religious',
-  tagAcademic: 'Academic',
-  tagMeeting: 'Meeting',
-  tagCultural: 'Cultural',
-}
-
 const categories = ['all', 'tagReligious', 'tagAcademic', 'tagMeeting', 'tagCultural']
 
 export default function Events() {
   const { t } = useLanguage()
+  const f = usePage('events')
   const [active, setActive] = useState('all')
+
+  const tagLabels = {
+    tagReligious: f('religiousLabel'),
+    tagAcademic: f('academicLabel'),
+    tagMeeting: f('meetingLabel'),
+    tagCultural: f('culturalLabel'),
+  }
+
+  const eventTitles = {
+    'eventsPage.sagaDawaTitle': f('sagaDawaTitle'),
+    'eventsPage.debateFestivalTitle': f('debateFestivalTitle'),
+    'eventsPage.guestTeachingTitle': f('guestTeachingTitle'),
+    'eventsPage.ev5': f('boudhanathPilgrimageTitle'),
+    'eventsPage.ev6': f('openHouseDayTitle'),
+    'eventsPage.ev7': f('thangkaArtistWorkshopTitle'),
+    'eventsPage.ev8': f('lhababDuchenVigilTitle'),
+  }
 
   const events = useMemo(() => (active === 'all' ? allEvents : allEvents.filter((e) => e.tagKey === active)), [active])
 
   return (
     <div>
-      <PageHero title={t('eventsPage.title')} subtitle={t('eventsPage.subtitle')} kicker={t('site.nav.events')} />
+      <PageHero title={f('heroTitle')} subtitle={f('heroSubtitle')} kicker={t('site.nav.events')} />
 
       <Section>
         <div className="mx-auto mb-[26px] flex max-w-[820px] flex-col gap-3.5">
           <p className="m-0 text-[14.5px] leading-[1.8] text-body">
-            Monks assemble at the main temple and stupa courtyard to observe major Tibetan Buddhist feast days and other important occasions in the valley. These days are so special that they mark the sanctuary&apos;s spiritual heartbeat. The school also stages its own festivals and events.
+            {f('introParagraph1')}
           </p>
           <p className="m-0 text-[14.5px] leading-[1.8] text-body">
-            Additionally, an annual Thangka Artist Workshop brings master artists from Nepal&apos;s northern regions and from India to the school.
+            {f('introParagraph2')}
           </p>
         </div>
 
@@ -75,7 +86,7 @@ export default function Events() {
                 </span>
                 <div className="min-w-0 flex-1">
                   <CardEyebrow color={tagTone[e.tagKey]}>{tagLabels[e.tagKey]}</CardEyebrow>
-                  <p className="mt-2 mb-0 font-heading text-[15px] font-bold text-ink">{t(e.titleKey)}</p>
+                  <p className="mt-2 mb-0 font-heading text-[15px] font-bold text-ink">{eventTitles[e.titleKey] || t(e.titleKey)}</p>
                   <p className="mt-1 mb-0 text-[11.5px] font-bold tracking-[0.6px] text-muted uppercase">
                     {e.time} · 📍 {e.venue}
                   </p>

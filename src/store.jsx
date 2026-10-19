@@ -41,7 +41,9 @@ function loadFromStorage() {
     if (!raw) return defaults()
     const saved = JSON.parse(raw)
     if (!saved || typeof saved !== 'object') return defaults()
-    return { ...defaults(), ...saved }
+    /* Saved edits layer over the shipped defaults, so fields added in a later
+       release still reach browsers that hold an older snapshot in storage. */
+    return { ...defaults(), ...saved, content: mergeDeep(contentDefaults, saved.content || {}) }
   } catch {
     return defaults()
   }

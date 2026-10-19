@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import { useField, PageHero, Section, Photo } from './shared.jsx'
+import { useField, usePage, PageHero, Section, Photo } from './shared.jsx'
 import { CardEyebrow, LinkRow, OpenCard, Panel } from '../../components/cards.jsx'
 import { colors } from '../../theme.js'
 import { cn } from '../../lib/cn.js'
-import { useLanguage } from '../../i18n.jsx'
 import { useAppStore } from '../../store.jsx'
 import { IconClock, IconMail, IconPhone, IconPin } from '../../components/icons.jsx'
 
@@ -16,7 +15,7 @@ const submitBtn =
   'mt-4.5 cursor-pointer rounded-full border-none bg-linear-to-br from-sage to-sage-light px-6 py-3 text-[14px] font-bold font-sans text-ink shadow-sage'
 
 export default function Contact() {
-  const { t } = useLanguage()
+  const f = usePage('contact')
   const { addContactMessage } = useAppStore()
   const introTitle = useField('contact', 'introTitle')
   const introBody = useField('contact', 'introBody')
@@ -64,16 +63,16 @@ export default function Contact() {
   }
 
   const cards = [
-    { label: t('contactPage.address'), value: 'Boudhanath, Kathmandu 44600, Nepal', Icon: IconPin, href: 'https://www.openstreetmap.org/?mlat=27.7212&mlon=85.3617#map=16/27.7212/85.3617', cta: 'Map' },
-    { label: t('contactPage.phone'), value: '+977 1 449 2210', Icon: IconPhone, href: 'tel:+97714492210', cta: 'Call' },
-    { label: t('contactPage.email'), value: 'admin@thar-manjushree.edu.np', Icon: IconMail, href: 'mailto:admin@thar-manjushree.edu.np', cta: 'Write' },
-    { label: t('contactPage.hoursTitle'), value: t('contactPage.hoursValue'), Icon: IconClock, cta: 'Visit' },
+    { label: f('addressLabel'), value: 'Boudhanath, Kathmandu 44600, Nepal', Icon: IconPin, href: 'https://www.openstreetmap.org/?mlat=27.7212&mlon=85.3617#map=16/27.7212/85.3617', cta: f('ctaMap') },
+    { label: f('phoneLabel'), value: '+977 1 449 2210', Icon: IconPhone, href: 'tel:+97714492210', cta: f('ctaCall') },
+    { label: f('emailLabel'), value: 'admin@thar-manjushree.edu.np', Icon: IconMail, href: 'mailto:admin@thar-manjushree.edu.np', cta: f('ctaWrite') },
+    { label: f('hoursLabel'), value: f('hoursValue'), Icon: IconClock, cta: f('ctaVisit') },
   ]
 
   const visitTips = [
-    { title: 'When to Come', body: 'Visitors are warmly welcomed most days between the close of morning prayers and the beginning of evening study.' },
-    { title: 'How to Behave', body: 'We ask for respectful, mindful conduct on the temple grounds — modest dress, quiet voices, and no photography inside the shrine halls.' },
-    { title: 'Getting Here', body: 'We are a short walk from the Boudhanath Stupa. Taxis and buses stop at the Boudha roundabout, from which the monastery is signposted.' },
+    { title: f('tip1Title'), body: f('tip1Body') },
+    { title: f('tip2Title'), body: f('tip2Body') },
+    { title: f('tip3Title'), body: f('tip3Body') },
   ]
 
   return (
@@ -81,12 +80,12 @@ export default function Contact() {
       <PageHero
         title={introTitle}
         subtitle={introBody}
-        kicker={t('contactPage.title')}
+        kicker={f('heroKicker')}
       />
 
       <Section>
         <div className="mb-[46px]">
-          <CardEyebrow>Reach Us</CardEyebrow>
+          <CardEyebrow>{f('reachUsEyebrow')}</CardEyebrow>
           <div className="mt-4.5">
             {cards.map((c) => (
               <LinkRow key={c.label} href={c.href} accent={colors.gold} cta={c.cta}>
@@ -108,11 +107,11 @@ export default function Contact() {
 
         <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-start gap-11">
           <Panel accent={colors.gold}>
-            <h3 className="m-0 font-heading text-[20px] font-bold text-ink">{t('contactPage.formTitle')}</h3>
-            <p className="mt-1.5 mb-0 text-[13px] text-muted">We reply to every message, usually within two working days.</p>
+            <h3 className="m-0 font-heading text-[20px] font-bold text-ink">{f('formTitle')}</h3>
+            <p className="mt-1.5 mb-0 text-[13px] text-muted">{f('formHelper')}</p>
             {done && (
               <div className="mt-4 rounded-md bg-success-soft px-4 py-[13px] text-[13.5px] font-semibold text-success">
-                {t('contactPage.sentMsg')}
+                {f('sentMessage')}
               </div>
             )}
             {serverError && (
@@ -140,7 +139,7 @@ export default function Contact() {
                 </div>
               </label>
               <label className={fieldLabel}>
-                <span className={fieldLabelText}>{t('contactPage.name')} *</span>
+                <span className={fieldLabelText}>{f('nameLabel')} *</span>
                 <input
                   className={cn(fieldInput, errors.name && 'border-danger')}
                   value={form.name}
@@ -149,7 +148,7 @@ export default function Contact() {
                 {errors.name && <span className="text-xs text-danger">{errors.name}</span>}
               </label>
               <label className={fieldLabel}>
-                <span className={fieldLabelText}>{t('contactPage.emailLabel')}</span>
+                <span className={fieldLabelText}>{f('emailFieldLabel')}</span>
                 <input
                   className={cn(fieldInput, errors.email && 'border-danger')}
                   type="email"
@@ -159,11 +158,11 @@ export default function Contact() {
                 {errors.email && <span className="text-xs text-danger">{errors.email}</span>}
               </label>
               <label className={cn(fieldLabel, 'min-w-full')}>
-                <span className={fieldLabelText}>{t('contactPage.subject')}</span>
+                <span className={fieldLabelText}>{f('subjectLabel')}</span>
                 <input className={fieldInput} value={form.subject} onChange={(e) => set('subject')(e.target.value)} />
               </label>
               <label className={cn(fieldLabel, 'min-w-full')}>
-                <span className={fieldLabelText}>{t('contactPage.message')} *</span>
+                <span className={fieldLabelText}>{f('messageLabel')} *</span>
                 <textarea
                   className={cn(fieldTextarea, errors.message && 'border-danger')}
                   value={form.message}
@@ -178,13 +177,13 @@ export default function Contact() {
               onClick={submit}
               disabled={busy}
             >
-              {busy ? 'Sending…' : t('contactPage.send')}
+              {busy ? f('sendingButton') : f('sendButton')}
             </button>
           </Panel>
 
           <div>
-            <CardEyebrow color={colors.primary}>{t('contactPage.visitTitle')}</CardEyebrow>
-            <p className="mt-2 mb-3.5 text-[13px] text-muted">{t('contactPage.mapNote')}</p>
+            <CardEyebrow color={colors.primary}>{f('visitTitle')}</CardEyebrow>
+            <p className="mt-2 mb-3.5 text-[13px] text-muted">{f('mapNote')}</p>
             <div className="overflow-hidden rounded-lg border border-line">
               <iframe
                 title="Thar Manjushree School location"
@@ -198,9 +197,9 @@ export default function Contact() {
       </Section>
 
       <Section
-        eyebrow="Plan Your Visit"
-        title="A Mindful Journey to Our Doors"
-        subtitle="A few courteous pointers to make your visit peaceful for you and for our community."
+        eyebrow={f('visitEyebrow')}
+        title={f('visitTitle')}
+        subtitle={f('visitSubtitle')}
         className="border-y border-line bg-surface-alt"
       >
         <div className="mx-auto grid max-w-[1240px] grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-center gap-11">

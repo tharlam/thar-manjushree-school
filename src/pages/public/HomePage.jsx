@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useLanguage } from '../../i18n.jsx'
 import { useAppStore } from '../../store.jsx'
 import { colors } from '../../theme.js'
-import { useField, Section, Photo } from './shared.jsx'
+import { useField, usePage, Section, Photo } from './shared.jsx'
 import { ArchCard, CardBody, CardEyebrow, CardTitle, Hairline, NotchCard, QuoteCard, RailCard, SealCard } from '../../components/cards.jsx'
 import { classes as baseClasses } from '../../data/index.js'
 import { usdValue, formatUsd } from '../../lib/currency.js'
@@ -107,9 +107,11 @@ const testimonials = [
     role: 'Supports two young monks',
   },
 ]
+void testimonials
 
 function Hero() {
   const { t } = useLanguage()
+  const f = usePage('home')
   const heroTitle = useField('home', 'heroTitle')
   const heroSubtitle = useField('home', 'heroSubtitle')
   const ctaSupport = useField('home', 'ctaSupport')
@@ -117,9 +119,9 @@ function Hero() {
   const [imgOk, setImgOk] = useState(true)
 
   const quickFacts = [
-    { value: '590', label: 'Years of unbroken lineage' },
-    { value: '1964', label: 'Serving young monks since' },
-    { value: '100%', label: 'Education, free of cost' },
+    { value: '590', label: f('quickFact1Label') },
+    { value: '1964', label: f('quickFact2Label') },
+    { value: '100%', label: f('quickFact3Label') },
   ]
 
   return (
@@ -140,7 +142,7 @@ function Hero() {
         <div className="max-w-[760px] animate-rise">
           <span className="inline-flex items-center gap-2.5 rounded-full border border-[rgba(221,184,107,0.42)] bg-sage/[0.14] px-[17px] py-2 text-[11.5px] font-bold tracking-[2.2px] text-sage-light uppercase backdrop-blur-[6px]">
             <span className="size-1.5 shrink-0 rounded-full bg-sage-light" />
-            Boudhanath · Kathmandu · Nepal
+            {f('heroKicker')}
           </span>
 
           <h1 className="mt-[22px] mb-0 mx-0 font-heading text-[clamp(36px,5.6vw,64px)] leading-[1.08] font-semibold tracking-[-1px] text-shadow-[0_2px_30px_rgba(9,13,24,0.5)]">
@@ -168,20 +170,20 @@ function Hero() {
         </div>
 
         <div className="mt-[46px] flex max-w-[760px] flex-wrap gap-x-[46px] gap-y-[18px] border-t border-white/[0.18] pt-6 animate-rise [animation-delay:.12s]">
-          {quickFacts.map((f) => (
-            <div key={f.label}>
+          {quickFacts.map((fact) => (
+            <div key={fact.label}>
               <p className="m-0 font-heading text-[26px] font-semibold tracking-[-0.5px] text-sage-light">
-                {f.value}
+                {fact.value}
               </p>
               <p className="mt-[5px] mb-0 mx-0 text-xs font-semibold tracking-[0.9px] text-white/[0.72] uppercase">
-                {f.label}
+                {fact.label}
               </p>
             </div>
           ))}
         </div>
 
         <p className="mt-[30px] mb-0 mx-0 max-w-[620px] text-[12.5px] tracking-[0.2px] text-white/[0.66] animate-rise [animation-delay:.18s]">
-          Free education, meals, robes &amp; housing for every young monk — serving with joy since 1964.
+          {f('heroNote')}
         </p>
       </div>
 
@@ -206,11 +208,12 @@ function Impact() {
     { label: t('homePage.statAdmissions'), value: loading ? '…' : pending },
   ]
 
+  const f = usePage('home')
   return (
     <div className="bg-ink py-11">
       <div className="mx-auto max-w-[1240px] px-[22px]">
         <p className="mt-0 mb-[26px] mx-0 text-center text-[11.5px] font-bold tracking-[2.2px] text-sage-light uppercase">
-          {t('homePage.impactTitle')} — {t('homePage.impactNote')}
+          {f('impactTitle')} — {f('impactNote')}
         </p>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-[18px]">
           {stats.map((s) => (
@@ -230,44 +233,43 @@ function Impact() {
 }
 
 function Welcome() {
+  const f = usePage('home')
   const welcomeTitle = useField('home', 'welcomeTitle')
+  const items = [f('welcomeItem1'), f('welcomeItem2'), f('welcomeItem3')]
   return (
-    <Section eyebrow="A Sanctuary of Mind & Study" title={welcomeTitle}>
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] items-center gap-9">
+    <Section eyebrow={f('welcomeEyebrow')} title={welcomeTitle}>
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(320px,100%),1fr))] items-center gap-9">
         <div className="order-1">
           <Photo
             src="/images/campus.jpg"
-            alt="The monastery of Tharlam Manjushree School beside the Boudhanath Stupa"
+            alt={f('welcomeAlt')}
             ratio="4 / 3"
-            fallbackLabel="Campus imagery placed here"
+            fallbackLabel={f('welcomeFallback')}
           />
         </div>
         <div className="order-2 flex flex-col gap-3.5">
           <p className="m-0 text-[15px] leading-[1.8] font-normal text-body">
-            Beside the great Boudhanath Stupa, Tharlam Manjushree School stands as a living sanctuary where two great
-            traditions of learning meet. Our young monks train in the classical disciplines of the monastery — memorization,
-            philosophy and daily debate — while mastering the modern classroom subjects that prepare them for the wider world.
+            {f('welcomeBody1')}
           </p>
           <p className="m-0 text-[15px] leading-[1.8] font-normal text-body">
-            The design of the day rises before sunrise with prayer, flows through philosophy and mathematics, and closes with
-            evening meditation — because we believe true education informs the mind and transforms the heart.
+            {f('welcomeBody2')}
           </p>
           <div className="mt-2 flex flex-wrap gap-3">
             <Link
               to="/about"
               className="rounded-full bg-pine px-[22px] py-[11px] text-[13.5px] font-bold text-white no-underline"
             >
-              Our Story →
+              {f('welcomeCtaStory')}
             </Link>
             <Link
               to="/programs"
               className="rounded-full border border-line px-[22px] py-2.5 text-[13.5px] font-bold text-pine no-underline"
             >
-              Programs →
+              {f('welcomeCtaPrograms')}
             </Link>
           </div>
           <div className="mt-1.5 grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-2.5">
-            {['1,000+ library volumes', '7–14 years entry age', '3 meals every day'].map((item) => (
+            {items.map((item) => (
               <div key={item} className="rounded-md border border-line bg-surface-alt px-3.5 py-2.5 text-[12.5px] font-semibold text-body">
                 {item}
               </div>
@@ -280,11 +282,12 @@ function Welcome() {
 }
 
 function Pillars() {
+  const f = usePage('home')
   return (
     <Section
-      eyebrow="What We Offer"
-      title="A School Unlike Any Other"
-      subtitle="Three commitments define everything we do, every morning of every school year."
+      eyebrow={f('pillarsEyebrow')}
+      title={f('pillarsTitle')}
+      subtitle={f('pillarsSubtitle')}
       className="border-y border-line bg-surface-alt"
     >
       <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-stretch gap-6">
@@ -293,9 +296,9 @@ function Pillars() {
             <span className="inline-flex size-[38px] items-center justify-center rounded-md bg-pine-soft font-heading text-base font-bold text-pine">
               {String(i + 1).padStart(2, '0')}
             </span>
-            <CardEyebrow className="mt-2.5">{p.eyebrow}</CardEyebrow>
-            <CardTitle className="mt-1.5">{p.title}</CardTitle>
-            <CardBody className="mt-1.5">{p.body}</CardBody>
+            <CardEyebrow className="mt-2.5">{f(`pillar${i + 1}Eyebrow`)}</CardEyebrow>
+            <CardTitle className="mt-1.5">{f(`pillar${i + 1}Title`)}</CardTitle>
+            <CardBody className="mt-1.5">{f(`pillar${i + 1}Body`)}</CardBody>
           </ArchCard>
         ))}
       </div>
@@ -304,23 +307,24 @@ function Pillars() {
 }
 
 function Leadership() {
+  const f = usePage('home')
   return (
     <Section
-      eyebrow="Leadership Messages"
-      title="Words of Guidance"
-      subtitle="Shared with the blessing of our community, these words carry the heart of our school."
+      eyebrow={f('leadershipEyebrow')}
+      title={f('leadershipTitle')}
+      subtitle={f('leadershipSubtitle')}
     >
       <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-8">
         {leadership.map((l, i) => (
           <SealCard key={l.label} accent={l.color} className="reveal" style={{ animationDelay: `${i * 0.1}s` }}>
-            <CardEyebrow color={l.color}>{l.label}</CardEyebrow>
+            <CardEyebrow color={l.color}>{f(`leader${i + 1}Label`)}</CardEyebrow>
             <p className="mt-3.5 mb-0 mx-0 text-[14.5px] leading-[1.85] text-body italic [text-wrap:pretty]">
-              &ldquo;{l.message}&rdquo;
+              &ldquo;{f(`leader${i + 1}Message`)}&rdquo;
             </p>
             <div className="mt-auto pt-[18px]">
               <Hairline />
-              <p className="mt-3.5 mb-0 mx-0 text-[14.5px] font-bold text-ink">{l.name}</p>
-              <p className="mt-[3px] mb-0 mx-0 text-[12.5px] font-semibold tracking-[0.2px] text-muted">{l.role}</p>
+              <p className="mt-3.5 mb-0 mx-0 text-[14.5px] font-bold text-ink">{f(`leader${i + 1}Name`)}</p>
+              <p className="mt-[3px] mb-0 mx-0 text-[12.5px] font-semibold tracking-[0.2px] text-muted">{f(`leader${i + 1}Role`)}</p>
             </div>
           </SealCard>
         ))}
@@ -330,11 +334,12 @@ function Leadership() {
 }
 
 function Support() {
+  const f = usePage('home')
   return (
     <Section
-      eyebrow="For Our Benefactors"
-      title="Where Your Kindness Goes"
-      subtitle="Every gift flows directly into the daily life of a young monk. This is precisely how your support is put to work."
+      eyebrow={f('supportEyebrow')}
+      title={f('supportTitle')}
+      subtitle={f('supportSubtitle')}
       className="border-y border-line bg-surface-alt"
     >
       <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-x-8 gap-y-3.5">
@@ -342,9 +347,9 @@ function Support() {
           const accent = i % 2 ? colors.primary : colors.accent
           return (
             <RailCard key={s.title} accent={accent} hover className="reveal" style={{ animationDelay: `${i * 0.06}s` }}>
-              <CardEyebrow color={accent}>Area {String(i + 1).padStart(2, '0')}</CardEyebrow>
-              <CardTitle className="mt-2.5">{s.title}</CardTitle>
-              <CardBody className="mt-1.5">{s.body}</CardBody>
+              <CardEyebrow color={accent}>{f(`supportArea${i + 1}Eyebrow`)}</CardEyebrow>
+              <CardTitle className="mt-2.5">{f(`supportArea${i + 1}Title`)}</CardTitle>
+              <CardBody className="mt-1.5">{f(`supportArea${i + 1}Body`)}</CardBody>
             </RailCard>
           )
         })}
@@ -354,7 +359,7 @@ function Support() {
           to="/donate"
           className="inline-block rounded-full bg-linear-to-br from-sage to-sage-light px-8 py-[14px] text-sm font-extrabold text-ink no-underline shadow-sage"
         >
-          Support Our Mission →
+          {f('supportCta')}
         </Link>
       </div>
     </Section>
@@ -363,27 +368,28 @@ function Support() {
 
 function Announcements() {
   const { t } = useLanguage()
+  const f = usePage('home')
   const { announcements, gallery } = useAppStore()
   const { lang } = useLanguage()
   const recent = announcements.slice(0, 3)
 
   const updates = [
     {
-      tag: 'Latest Milestone',
-      title: 'A New Library & Reading Hall',
-      body: 'Thanks to the generosity of our supporters, a new reading hall and library have opened for our young monks, with thousands of texts in Tibetan, Sanskrit and English.',
+      tag: f('update1Tag'),
+      title: f('update1Title'),
+      body: f('update1Body'),
       color: colors.gold,
     },
     {
-      tag: 'Featured Notice',
-      title: 'Admissions Open for the 2026/27 Year',
-      body: 'Applications are now open for boys aged 7 to 14. Visit the Admission page to begin the online inquiry before the end of August.',
+      tag: f('update2Tag'),
+      title: f('update2Title'),
+      body: f('update2Body'),
       color: colors.primary,
     },
   ]
 
   return (
-    <Section eyebrow="Community Updates & News" title={t('homePage.announcementsTitle')}>
+    <Section eyebrow={f('announcementsEyebrow')} title={f('announcementsTitle')}>
       <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-[18px]">
         <div className="flex flex-col gap-3.5">
           {updates.map((u, i) => (
@@ -397,7 +403,7 @@ function Announcements() {
 
         <div className="flex flex-col gap-3.5">
           <RailCard accent={colors.primary} className="reveal [animation-delay:.16s]">
-            <CardTitle className="text-[17px]">{t('homePage.newsTitle')}</CardTitle>
+            <CardTitle className="text-[17px]">{f('newsTitle')}</CardTitle>
             <div className="mt-3.5 flex flex-col gap-1.5">
               {recent.map((a) => (
                 <div key={a.id} className="flex items-baseline gap-3 border-b border-line pb-1.5">
@@ -427,14 +433,20 @@ function Announcements() {
 }
 
 function Testimonials() {
+  const f = usePage('home')
+  const testimonialsCms = [
+    { quote: f('testimonial1Quote'), name: f('testimonial1Name'), role: f('testimonial1Role') },
+    { quote: f('testimonial2Quote'), name: f('testimonial2Name'), role: f('testimonial2Role') },
+  ]
+  void testimonialsCms
   return (
     <Section
-      eyebrow="Kind Words"
-      title="In the Words of Our Community"
+      eyebrow={f('testimonialsEyebrow')}
+      title={f('testimonialsTitle')}
       className="border-t border-line bg-[linear-gradient(160deg,#e6f5e6_0%,#f2fbf2_60%)]"
     >
       <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-8">
-        {testimonials.map((x, i) => (
+        {testimonialsCms.map((x, i) => (
           <QuoteCard
             key={x.name}
             quote={x.quote}
@@ -450,14 +462,15 @@ function Testimonials() {
 }
 
 function Invitations() {
+  const f = usePage('home')
   return (
-    <Section eyebrow="Take Part" title="Three Ways to Make a Difference">
+    <Section eyebrow={f('invitationsEyebrow')} title={f('invitationsTitle')}>
       <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-stretch gap-6">
         {invitations.map((i, n) => (
           <NotchCard key={i.title} accent={i.color} hover className="reveal" style={{ animationDelay: `${n * 0.08}s` }}>
-            <CardEyebrow color={i.color}>{i.index}</CardEyebrow>
-            <CardTitle className="mt-3.5 pr-3.5">{i.title}</CardTitle>
-            <CardBody className="mt-2.5 flex-1">{i.body}</CardBody>
+            <CardEyebrow color={i.color}>{f(`invitation${n + 1}Index`)}</CardEyebrow>
+            <CardTitle className="mt-3.5 pr-3.5">{f(`invitation${n + 1}Title`)}</CardTitle>
+            <CardBody className="mt-2.5 flex-1">{f(`invitation${n + 1}Body`)}</CardBody>
             <Link
               to={i.to}
               className="card-cta mt-[18px] self-start rounded-full px-5 py-[11px] text-[13px] font-bold text-white no-underline"
@@ -466,7 +479,7 @@ function Invitations() {
                 boxShadow: `0 6px 18px ${i.color}33`,
               }}
             >
-              {i.cta}
+              {f(`invitation${n + 1}Cta`)}
               <span className="card-cta-arrow">→</span>
             </Link>
           </NotchCard>
@@ -478,6 +491,7 @@ function Invitations() {
 
 export default function HomePage() {
   const { t } = useLanguage()
+  const f = usePage('home')
   return (
     <div>
       <Hero />
@@ -492,16 +506,16 @@ export default function HomePage() {
       <div className="relative overflow-hidden bg-[radial-gradient(90%_120%_at_50%_0%,#285848_0%,#0f2a2a_55%,#0f2a2a_100%)] px-[22px] py-[54px] text-center">
         <div className="relative">
           <p className="mt-0 mb-3 mx-0 text-[11.5px] font-bold tracking-[2.2px] text-sage-light uppercase">
-            Begin the Journey Today
+            {f('bottomEyebrow')}
           </p>
           <h2 className="mx-auto my-0 max-w-[640px] font-heading text-[clamp(26px,3.4vw,36px)] font-semibold text-white">
-            The life of one young monk is changed the moment you choose to care.
+            {f('bottomTitle')}
           </h2>
           <Link
             to="/donate"
             className="mt-[26px] inline-block rounded-full bg-linear-to-br from-sage to-sage-light px-9 py-[15px] text-[14.5px] font-extrabold text-ink no-underline shadow-sage"
           >
-            {t('site.donateNow')}
+            {f('bottomCta') || t('site.donateNow')}
           </Link>
         </div>
       </div>

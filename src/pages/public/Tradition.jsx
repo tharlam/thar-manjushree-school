@@ -1,26 +1,9 @@
-import { useField, PageHero, Section } from './shared.jsx'
+import { useField, PageHero, Section, usePage } from './shared.jsx'
 import { CardBody, CardEyebrow, StatBand } from '../../components/cards.jsx'
 import { colors } from '../../theme.js'
-import { useLanguage } from '../../i18n.jsx'
-
-const milestones = [
-  { year: '1964', key: 'm1', text: 'School founded with a handful of students in a single prayer hall.' },
-  { year: '1982', key: 'm2', text: 'First full class of monks completes the five great treatises curriculum.' },
-  { year: '2001', key: 'm3', text: 'Modern academic wing opens with certified teachers for English, science and mathematics.' },
-  { year: '2015', key: 'm4', text: 'Monastery library expands to over 10,000 texts in Tibetan, Sanskrit and English.' },
-  { year: '2026', key: 'm5', text: 'Today our community continues to serve young monks from across the Himalayan region.' },
-]
-
-const translations = {
-  m1: { en: 'School founded with a handful of students in a single prayer hall.', ne: 'एकल प्रार्थना कक्षमा थोरै विद्यार्थीसहित विद्यालयको स्थापना।', bo: 'མཆོད་ཁང་གཅིག་ཏུ་སློབ་མ་ཉུང་ཤས་ཤིག་དང་བཅས་སློབ་གྲྭ་བཙུགས།' },
-  m2: { en: 'First full class of monks completes the five great treatises curriculum.', ne: 'भिक्षुहरूको पहिलो पूर्ण कक्षाले पाँच महान् ग्रन्थहरूको पाठ्यक्रम पूरा गर्छ।', bo: 'གྲྭ་བ་ཚོགས་པ་ཐོག་མ་གཅིག་གིས་གཞུང་ཆེན་ལྔའི་སློབ་གཉེར་མཇུག་སྒྲིལ།' },
-  m3: { en: 'Modern academic wing opens with certified teachers for English, science and mathematics.', ne: 'अंग्रेजी, विज्ञान र गणितका प्रमाणित शिक्षकसहित आधुनिक शैक्षिक भवन खुल्छ।', bo: 'དབྱིན་ཡིག་དང་། ཚན་རིག། རྩིས་རིག་བཅས་ཀྱི་ལས་གནས་དགེ་རྒན་དང་བཅས་དེང་རབས་སློབ་ཁང་ཕྱེ།' },
-  m4: { en: 'Monastery library expands to over 10,000 texts in Tibetan, Sanskrit and English.', ne: 'मठ पुस्तकालय तिब्बती, संस्कृत र अंग्रेजीमा १०,००० भन्दा बढी ग्रन्थसहित विस्तार हुन्छ।', bo: 'དགོན་སྡེའི་དཔེ་མཛོད་བོད་ཡིག་དང་། ལེགས་སྦྱར། དབྱིན་ཡིག་བཅས་ཀྱི་དཔེ་ཆ་ཁྲི་ལྷག་བར་རྒྱ་བསྐྱེད།' },
-  m5: { en: 'Today our community continues to serve young monks from across the Himalayan region.', ne: 'आज हाम्रो समुदायले हिमाली क्षेत्रभरका युवा भिक्षुहरूको सेवा जारी राख्छ।', bo: 'དེ་རིང་ང་ཚོའི་སྡེ་ཚོགས་ཀྱིས་ཧི་མ་ལ་ཡའི་ས་ཁུལ་ཡོངས་ནས་ཕེབས་པའི་གྲྭ་བ་གཞོན་ནུ་རྣམས་ལ་ཞབས་ཞུ་རྒྱུན་སྐྱོང་བྱེད་བཞིན་ཡོད།' },
-}
 
 export default function Tradition() {
-  const { lang } = useLanguage()
+  const f = usePage('tradition')
   const introTitle = useField('tradition', 'introTitle')
   const introBody = useField('tradition', 'introBody')
   const historyTitle = useField('tradition', 'historyTitle')
@@ -28,9 +11,17 @@ export default function Tradition() {
   const philosophyTitle = useField('tradition', 'philosophyTitle')
   const philosophyBody = useField('tradition', 'philosophyBody')
 
+  const milestones = [
+    { year: '1964', key: 'm1', text: f('milestone1Text') },
+    { year: '1982', key: 'm2', text: f('milestone2Text') },
+    { year: '2001', key: 'm3', text: f('milestone3Text') },
+    { year: '2015', key: 'm4', text: f('milestone4Text') },
+    { year: '2026', key: 'm5', text: f('milestone5Text') },
+  ]
+
   return (
     <div>
-      <PageHero title={introTitle} subtitle={introBody} kicker="Mahayana · Nalanda Lineage" />
+      <PageHero title={introTitle} subtitle={introBody} kicker={f('pageKicker')} />
 
       <Section title={historyTitle} subtitle={historyBody}>
         <div className="relative mx-auto flex max-w-[760px] flex-col">
@@ -41,8 +32,8 @@ export default function Tradition() {
                 {m.year}
               </span>
               <div className="flex-1 border-b border-l border-line py-3.5 pl-[22px]">
-                <CardEyebrow color={colors.gold}>Milestone</CardEyebrow>
-                <CardBody className="mt-2">{translations[m.key]?.[lang] || translations[m.key]?.en || m.text}</CardBody>
+                <CardEyebrow color={colors.gold}>{f('milestoneLabel')}</CardEyebrow>
+                <CardBody className="mt-2">{m.text}</CardBody>
               </div>
             </div>
           ))}
@@ -51,13 +42,13 @@ export default function Tradition() {
 
       <Section title={philosophyTitle} subtitle={philosophyBody} className="border-t border-line bg-surface-alt">
         <div className="mx-auto max-w-[760px]">
-          <CardEyebrow>Three Trainings</CardEyebrow>
+          <CardEyebrow>{f('threeTrainingsLabel')}</CardEyebrow>
           <StatBand
             className="mt-[22px]"
             stats={[
-              { value: 'Śīla', label: 'Discipline & Ethics', color: colors.primary },
-              { value: 'Samādhi', label: 'Meditation & Focus', color: colors.accent },
-              { value: 'Prajñā', label: 'Wisdom & Insight', color: colors.success },
+              { value: f('training1Value'), label: f('training1Label'), color: colors.primary },
+              { value: f('training2Value'), label: f('training2Label'), color: colors.accent },
+              { value: f('training3Value'), label: f('training3Label'), color: colors.success },
             ]}
           />
         </div>

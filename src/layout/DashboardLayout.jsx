@@ -149,7 +149,7 @@ function ProfileBadge() {
         <span className="inline-flex size-[34px] items-center justify-center rounded-full bg-linear-to-br from-pine to-ink text-xs font-extrabold text-white">
           {initials}
         </span>
-        <span className="text-left leading-tight">
+        <span className="hidden text-left leading-tight sm:block">
           <span className="block text-[13px] font-bold text-ink">Lama Tsering Norbu</span>
           <span className="block text-[11px] text-muted">Head Administrator</span>
         </span>
@@ -286,7 +286,7 @@ export default function DashboardLayout() {
             ☰
           </button>
 
-          <div className="relative max-w-[420px] flex-1">
+          <div className="relative max-w-[420px] min-w-0 flex-1">
             <span className="absolute top-1/2 left-3 inline-flex -translate-y-1/2 text-muted">
               <IconSearch size={16} />
             </span>

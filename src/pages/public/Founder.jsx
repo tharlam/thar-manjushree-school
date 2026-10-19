@@ -1,4 +1,4 @@
-import { useField, PageHero, Section } from './shared.jsx'
+import { useField, usePage, PageHero, Section } from './shared.jsx'
 import { CardBody, CardEyebrow, CardTitle, StatBand } from '../../components/cards.jsx'
 import { useLanguage } from '../../i18n.jsx'
 
@@ -10,6 +10,7 @@ export default function Founder() {
   const bioBody = useField('founder', 'bioBody')
   const visionTitle = useField('founder', 'visionTitle')
   const visionBody = useField('founder', 'visionBody')
+  const f = usePage('founder')
 
   const facts = [
     { value: '1964', label: t('settingsPage.established') },
@@ -20,7 +21,7 @@ export default function Founder() {
 
   return (
     <div>
-      <PageHero title={name} subtitle={title} kicker={t('founderPage.title')} />
+      <PageHero title={name} subtitle={title} kicker={f('pageKicker')} />
 
       <Section>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-center gap-11">
@@ -31,7 +32,7 @@ export default function Founder() {
           </div>
 
           <div>
-            <CardEyebrow>Life &amp; Service</CardEyebrow>
+            <CardEyebrow>{f('lifeAndServiceEyebrow')}</CardEyebrow>
             <CardTitle as="h3" className="mt-2.5 text-[20px]">{bioTitle}</CardTitle>
             <CardBody className="mt-3 text-[14.5px]">{bioBody}</CardBody>
           </div>

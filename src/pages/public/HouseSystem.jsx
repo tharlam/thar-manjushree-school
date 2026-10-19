@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../../i18n.jsx'
 import { useAppStore } from '../../store.jsx'
-import { PageHero, Section } from './shared.jsx'
+import { PageHero, Section, usePage } from './shared.jsx'
 import { OpenCard } from '../../components/cards.jsx'
 import { Button } from '../../components/ui.jsx'
 import { Toast } from '../../components/ui.jsx'
@@ -11,6 +11,7 @@ import { houses } from '../../data/index.js'
 
 export default function HouseSystem() {
   const { t } = useLanguage()
+  const f = usePage('houses')
   const { houseDetails } = useAppStore()
   const [editingId, setEditingId] = useState(null)
   const [toast, setToast] = useState(null)
@@ -21,8 +22,8 @@ export default function HouseSystem() {
   return (
     <div>
       <PageHero
-        title="House System"
-        subtitle="Our student body is divided into four distinct houses. These houses encourage healthy teamwork, community cleaning duties, friendly academic quizzes, and traditional debating tournaments."
+        title={f('heroTitle')}
+        subtitle={f('heroSubtitle')}
         kicker={t('site.nav.houses')}
       />
 
@@ -48,28 +49,28 @@ export default function HouseSystem() {
 
                 <div className="mt-4 flex flex-col gap-[7px]">
                   <p className="m-0 text-[12.5px] text-body">
-                    <span className="font-bold text-ink">Members</span> · {h.members} {t('housesPage.members').toLowerCase()}
+                    <span className="font-bold text-ink">{f('membersLabel')}</span> · {h.members} {f('membersWord').toLowerCase()}
                   </p>
                   <p className="m-0 text-[12.5px] text-body">
-                    <span className="font-bold text-ink">Spiritual Symbol</span> · {h.symbol}
+                    <span className="font-bold text-ink">{f('spiritualSymbolLabel')}</span> · {h.symbol}
                   </p>
                   <p className="m-0 text-[12.5px] text-body">
-                    <span className="font-bold text-ink">Core Virtue</span> · {h.virtue}
+                    <span className="font-bold text-ink">{f('coreVirtueLabel')}</span> · {h.virtue}
                   </p>
                   <p className="mt-1 mb-0 font-heading text-[13px] text-ink italic">&ldquo;{h.motto}&rdquo;</p>
                   <p className="mt-1 mb-0 text-[12.5px] text-body">
-                    <span className="font-bold text-ink">{t('housesPage.captain')}</span> · {h.captain}
+                    <span className="font-bold text-ink">{f('captainLabel')}</span> · {h.captain}
                   </p>
                 </div>
 
                 <div className="mt-5 flex flex-wrap gap-2.5 border-t border-line pt-4">
                   <Link to={`/houses/${h.id}`} className="flex-1 no-underline">
                     <Button tone="primary" size="sm" className="w-full whitespace-nowrap" style={{ background: h.color, borderColor: h.color }}>
-                      Visit House
+                      {f('visitHouseLabel')}
                     </Button>
                   </Link>
                   <Button tone="outline" size="sm" className="flex-1 whitespace-nowrap" onClick={() => setEditingId(h.id)}>
-                    Edit Section
+                    {f('editSectionLabel')}
                   </Button>
                 </div>
               </OpenCard>

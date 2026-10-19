@@ -5,12 +5,19 @@ import { useAppStore } from '../../store.jsx'
 import { layout, radii } from '../../theme.js'
 import { cn } from '../../lib/cn.js'
 
-export function useField(page, field) {
+export function usePage(page) {
   const { content } = useAppStore()
   const { lang } = useLanguage()
-  const node = content?.pages?.[page]?.[field]
-  if (!node) return ''
-  return node[lang] || node.en || ''
+  const node = content?.pages?.[page] || {}
+  return (field) => {
+    const value = node[field]
+    if (!value) return ''
+    return value[lang] || value.en || ''
+  }
+}
+
+export function useField(page, field) {
+  return usePage(page)(field)
 }
 
 /* A premium image slot with an elegant fallback until real photography is supplied. */

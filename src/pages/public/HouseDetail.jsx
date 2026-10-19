@@ -1,22 +1,23 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useAppStore } from '../../store.jsx'
-import { PageHero, Section, Photo } from './shared.jsx'
+import { PageHero, Section, Photo, usePage } from './shared.jsx'
 import { CardEyebrow, CardTitle, CardBody, OpenCard, Panel } from '../../components/cards.jsx'
 import { Button, Toast, EmptyState } from '../../components/ui.jsx'
 import { MascotCard, SloganQuiz } from '../../components/house/widgets.jsx'
 import { HouseEditor } from '../../components/house/HouseEditor.jsx'
 import { houses } from '../../data/index.js'
 
-const GALLERY_TABS = [
-  { key: 'events', label: 'Events' },
-  { key: 'sports', label: 'Sports' },
-  { key: 'daily', label: 'Daily Life' },
-]
-
 export default function HouseDetail() {
   const { houseId } = useParams()
   const { houseDetails } = useAppStore()
+  const f = usePage('houseDetail')
+
+  const galleryTabs = [
+    { key: 'events', label: f('galleryTab1Label') },
+    { key: 'sports', label: f('galleryTab2Label') },
+    { key: 'daily', label: f('galleryTab3Label') },
+  ]
 
   const house = houses.find((h) => h.id === houseId)
   const detail = house ? houseDetails?.[house.id] : null
@@ -28,10 +29,10 @@ export default function HouseDetail() {
   if (!house || !detail) {
     return (
       <div className="py-24">
-        <EmptyState text="That house could not be found." />
+        <EmptyState text={f('notFoundMessage')} />
         <div className="flex justify-center">
           <Link to="/houses" className="no-underline">
-            <Button tone="primary">Back to House System</Button>
+            <Button tone="primary">{f('backToHousesLabel')}</Button>
           </Link>
         </div>
       </div>
@@ -54,18 +55,18 @@ export default function HouseDetail() {
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
             <Link to="/houses" className="no-underline">
               <Button tone="outline" className="bg-white/95">
-                ← All Houses
+                {f('allHousesLabel')}
               </Button>
             </Link>
             <Button tone="primary" style={{ background: accent, borderColor: accent }} onClick={() => setEditOpen(true)}>
-              Edit Section
+              {f('editSectionLabel')}
             </Button>
           </div>
         </PageHero>
       </div>
 
       {/* 1. House Identity — photo + description only */}
-      <Section eyebrow="The Vibe" title="House Identity">
+      <Section eyebrow={f('identityEyebrow')} title={f('identityTitle')}>
         <div className="grid items-center gap-8 lg:grid-cols-[1.05fr_1fr] lg:gap-12">
           <Photo
             src={vibe.banner}
@@ -79,7 +80,7 @@ export default function HouseDetail() {
       </Section>
 
       {/* 2. Leadership Team — profiles only, no contact details */}
-      <Section eyebrow="The Captains" title="Leadership Team" className="border-t border-line bg-surface-alt">
+      <Section eyebrow={f('captainsEyebrow')} title={f('leadershipTitle')} className="border-t border-line bg-surface-alt">
         <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6">
           {(detail.captains || []).map((c) => (
             <OpenCard key={c.name}>
@@ -101,11 +102,11 @@ export default function HouseDetail() {
       </Section>
 
       {/* 3. Records & Achievements — "Trophy Case" */}
-      <Section eyebrow="Trophy Case" title="Records & Achievements">
+      <Section eyebrow={f('recordsEyebrow')} title={f('recordsTitle')}>
         <p className="mx-auto mt-0 mb-7 max-w-[640px] text-center text-[14.5px] text-muted">{detail.records?.summary}</p>
         <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr]">
           <Panel pad={24}>
-            <CardEyebrow color={accent}>House Cup History</CardEyebrow>
+            <CardEyebrow color={accent}>{f('cupHistoryTitle')}</CardEyebrow>
             <ol className="m-0 mt-4 list-none p-0">
               {(detail.records?.cupWins || []).map((w) => (
                 <li key={w.year} className="flex gap-4 border-b border-line py-3.5 last:border-b-0">
@@ -133,9 +134,9 @@ export default function HouseDetail() {
       </Section>
 
       {/* 4. Gallery & Media — "Visuals" */}
-      <Section eyebrow="Visuals" title="Gallery & Media" className="border-t border-line bg-surface-alt">
+      <Section eyebrow={f('galleryEyebrow')} title={f('galleryTitle')} className="border-t border-line bg-surface-alt">
         <div className="mb-6 flex justify-center gap-2">
-          {GALLERY_TABS.map((tb) => (
+          {galleryTabs.map((tb) => (
             <button
               key={tb.key}
               type="button"
@@ -167,7 +168,7 @@ export default function HouseDetail() {
                 </svg>
               </span>
               <p className="mt-3 mb-0 text-[13.5px] font-bold">{gallery.video.title}</p>
-              <p className="m-0 text-[11.5px] text-white/80">Highlight reel · {gallery.video.duration}</p>
+              <p className="m-0 text-[11.5px] text-white/80">{f('highlightReelLabel')} · {gallery.video.duration}</p>
             </div>
           </div>
         )}
@@ -175,9 +176,9 @@ export default function HouseDetail() {
 
       {/* 5. Get Involved */}
       <Section
-        eyebrow="Get Involved"
-        title="More Than Just a House"
-        subtitle={`Meet ${house.name}'s mascot and put your knowledge to the test with a quick slogan quiz.`}
+        eyebrow={f('getInvolvedEyebrow')}
+        title={f('getInvolvedTitle')}
+        subtitle={f('getInvolvedSubtitle').replace('{house}', house.name)}
       >
         <div className="grid gap-6 lg:grid-cols-2">
           <MascotCard mascot={detail.interactive?.mascot} accent={accent} />

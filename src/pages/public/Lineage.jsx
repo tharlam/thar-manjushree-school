@@ -1,16 +1,8 @@
-import { useField, PageHero, Section } from './shared.jsx'
+import { useField, usePage, PageHero, Section } from './shared.jsx'
 import { RailCard } from '../../components/cards.jsx'
 import { colors } from '../../theme.js'
 import { useLanguage } from '../../i18n.jsx'
 import { classes } from '../../data/index.js'
-
-const lineageSteps = [
-  { label: 'Sakyamuni Buddha', sub: 'The Founder of the Teaching', color: colors.primary },
-  { label: 'Nalanda Masters', sub: 'Nagārjuna · Āryadeva · Dharmakīrti', color: colors.primaryDark },
-  { label: 'Tibetan Lineages', sub: 'Kagyu & Gelug traditions', color: colors.accent },
-  { label: 'Tharlam Rinpoche', sub: 'Founder of Thar Manjushree', color: colors.primary },
-  { label: 'Our Teachers Today', sub: 'Geshes & Khenpos of the community', color: colors.success },
-]
 
 export default function Lineage() {
   const { t } = useLanguage()
@@ -18,12 +10,21 @@ export default function Lineage() {
   const introBody = useField('lineage', 'introBody')
   const mastersTitle = useField('lineage', 'mastersTitle')
   const mastersBody = useField('lineage', 'mastersBody')
+  const f = usePage('lineage')
+
+  const lineageSteps = [
+    { label: f('lineageStep1Label'), sub: f('lineageStep1Sub'), color: colors.primary },
+    { label: f('lineageStep2Label'), sub: f('lineageStep2Sub'), color: colors.primaryDark },
+    { label: f('lineageStep3Label'), sub: f('lineageStep3Sub'), color: colors.accent },
+    { label: f('lineageStep4Label'), sub: f('lineageStep4Sub'), color: colors.primary },
+    { label: f('lineageStep5Label'), sub: f('lineageStep5Sub'), color: colors.success },
+  ]
 
   const masters = [...new Map(classes.map((c) => [c.teacher, c])).values()]
 
   return (
     <div>
-      <PageHero title={introTitle} subtitle={introBody} kicker={t('lineagePage.title')} />
+      <PageHero title={introTitle} subtitle={introBody} kicker={f('pageKicker')} />
 
       <Section>
         <div className="mx-auto flex max-w-[640px] flex-col">

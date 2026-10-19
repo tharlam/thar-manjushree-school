@@ -1,21 +1,65 @@
-const F = (en, ne, bo) => ({ en, ne, bo })
+import { F } from './content/field.js'
+import { fields as aboutFields } from './content/about.js'
+import { fields as admissionsFields } from './content/admissions.js'
+import { fields as contactFields } from './content/contact.js'
+import { fields as curriculumFields } from './content/curriculum.js'
+import { fields as donationsFields } from './content/donations.js'
+import { fields as eventsFields } from './content/events.js'
+import { fields as founderFields } from './content/founder.js'
+import { fields as galleryFields } from './content/gallery.js'
+import { fields as homeFields } from './content/home.js'
+import { fields as housesFields } from './content/houses.js'
+import { fields as houseDetailFields } from './content/houseDetail.js'
+import { fields as lineageFields } from './content/lineage.js'
+import { fields as programsFields } from './content/programs.js'
+import { fields as scheduleFields } from './content/schedule.js'
+import { fields as teachersFields } from './content/teachers.js'
+import { fields as traditionFields } from './content/tradition.js'
 
-export const pageFields = {
-  home: ['heroTitle', 'heroSubtitle', 'welcomeTitle', 'welcomeBody', 'ctaSupport', 'ctaAdmissions'],
-  tradition: ['introTitle', 'introBody', 'historyTitle', 'historyBody', 'philosophyTitle', 'philosophyBody'],
-  founder: ['name', 'title', 'bioTitle', 'bioBody', 'visionTitle', 'visionBody'],
-  lineage: ['introTitle', 'introBody', 'mastersTitle', 'mastersBody'],
-  curriculum: ['introTitle', 'introBody', 'philosophyTitle', 'philosophyBody', 'modernTitle', 'modernBody'],
-  schedule: ['introTitle', 'introBody'],
-  admissions: ['introTitle', 'introBody', 'requirementsTitle', 'requirementsBody', 'processTitle', 'processBody'],
-  gallery: ['introTitle', 'introBody'],
-  donations: ['introTitle', 'introBody', 'bankTitle', 'bankBody', 'transparencyTitle', 'transparencyBody'],
-  contact: ['introTitle', 'introBody'],
+/* Page files hold the fields added when the whole public site became editable.
+   They layer on top of the base copy below, which still owns the original
+   English/Nepali/Bodo wording for the earliest pages. */
+const extraPages = {
+  home: homeFields,
+  about: aboutFields,
+  tradition: traditionFields,
+  founder: founderFields,
+  lineage: lineageFields,
+  curriculum: curriculumFields,
+  schedule: scheduleFields,
+  programs: programsFields,
+  houses: housesFields,
+  houseDetail: houseDetailFields,
+  teachers: teachersFields,
+  admissions: admissionsFields,
+  events: eventsFields,
+  gallery: galleryFields,
+  donations: donationsFields,
+  contact: contactFields,
 }
 
-export const contentDefaults = {
-  pages: {
-    home: {
+/* Editor ordering for the Content Manager page picker. */
+const pageOrder = [
+  'home',
+  'about',
+  'tradition',
+  'founder',
+  'lineage',
+  'curriculum',
+  'schedule',
+  'programs',
+  'houses',
+  'houseDetail',
+  'teachers',
+  'admissions',
+  'events',
+  'gallery',
+  'donations',
+  'contact',
+]
+
+const basePages = {
+  home: {
       heroTitle: F(
         'Where Ancient Wisdom Awakens Modern Minds',
         'बौद्ध शिक्षाको जीवन्त परम्परा संरक्षण गर्दै',
@@ -173,8 +217,17 @@ export const contentDefaults = {
         'ང་ཚོས་ཁྱེད་ཅག་ང་ཚོའི་གླིང་འཁོར་དུ་དགའ་བསུ་ཞུ་འདོད། ཉིན་མང་པོར་ཐོག་མའི་མཆོད་པ་དང་དགོང་མོའི་སློབ་སྦྱོང་གི་བར་དུ་མི་ཚོར་དགའ་བསུ་ཞུ་བཞིན་ཡོད། ལྟ་རྟོག་གི་འཆར་གཞི་བཟོ་བའི་སྔོན་དུ་འབྲེལ་གཏུགས་གནང་རོགས།'
       ),
     },
-  },
 }
+
+/* Each page merges the original copy with the fields added for full-site
+   editing; the newer field files only ever add keys, never redefine them. */
+const mergedPages = Object.fromEntries(
+  pageOrder.map((page) => [page, { ...(basePages[page] || {}), ...(extraPages[page] || {}) }]),
+)
+
+export const contentDefaults = { pages: mergedPages }
+
+export const pageFields = Object.fromEntries(pageOrder.map((page) => [page, Object.keys(mergedPages[page])]))
 
 export const defaultAnnouncements = [
   {

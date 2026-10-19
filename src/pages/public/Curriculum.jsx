@@ -1,50 +1,34 @@
-import { PageHero, Section } from './shared.jsx'
+import { PageHero, Section, usePage } from './shared.jsx'
 import { CardEyebrow, CardTitle, OpenCard } from '../../components/cards.jsx'
 import { colors } from '../../theme.js'
-import { useLanguage } from '../../i18n.jsx'
-
-const levels = [
-  {
-    eyebrow: 'Level One',
-    title: 'Pre-primary level (Class 4 to 6)',
-    color: colors.primary,
-    items: [
-      'Tibetan language: Basic reading and writing.',
-      'Basic English: Mathematics.',
-      'Daily prayer, creative activities, physical activities.',
-    ],
-  },
-  {
-    eyebrow: 'Level Two',
-    title: 'Primary level (Class 1 to 5)',
-    color: colors.accent,
-    items: [
-      'Tibetan and English language, Math, Science, Social Studies.',
-      'Introduction to Buddhist studies and ritual practices.',
-    ],
-  },
-  {
-    eyebrow: 'Level Three',
-    title: 'Secondary level (Class 6 to 8)',
-    color: colors.success,
-    items: [
-      'Advanced Tibetan grammar, English composition, Math, Science.',
-      'Buddhist studies: Four Noble Truths, Eightfold Path.',
-      'Ritual training: Torma, Puja, Sutra chanting.',
-    ],
-  },
-]
 
 export default function Curriculum() {
-  const { t } = useLanguage()
+  const f = usePage('curriculum')
+
+  const levels = [
+    {
+      eyebrow: f('level1Eyebrow'),
+      title: f('level1Title'),
+      color: colors.primary,
+      items: [f('level1Item1'), f('level1Item2'), f('level1Item3')],
+    },
+    {
+      eyebrow: f('level2Eyebrow'),
+      title: f('level2Title'),
+      color: colors.accent,
+      items: [f('level2Item1'), f('level2Item2')],
+    },
+    {
+      eyebrow: f('level3Eyebrow'),
+      title: f('level3Title'),
+      color: colors.success,
+      items: [f('level3Item1'), f('level3Item2'), f('level3Item3')],
+    },
+  ]
 
   return (
     <div>
-      <PageHero
-        title="Our Approach to Education"
-        subtitle="Combining traditional Buddhist historical practices with modern academic subjects, our curriculum nurtures the mind, heart, and spirit. We focus on wisdom, compassion, and service."
-        kicker={t('curriculumPage.title')}
-      />
+      <PageHero title={f('heroTitle')} subtitle={f('heroSubtitle')} kicker={f('heroKicker')} />
 
       <Section>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-8">

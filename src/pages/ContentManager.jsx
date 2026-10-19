@@ -44,16 +44,40 @@ const friendly = {
 
 const pageNames = {
   home: 'Home',
+  about: 'About',
   tradition: 'Our Tradition',
   founder: 'Founder',
   lineage: 'Lineage & Masters',
   curriculum: 'Curriculum',
   schedule: 'Daily Schedule',
+  programs: 'Programs',
+  houses: 'Houses',
+  houseDetail: 'House Page',
+  teachers: 'Faculty & Monks',
   admissions: 'Admissions',
+  events: 'Events',
   gallery: 'Gallery',
   donations: 'Donations',
   contact: 'Contact',
 }
+
+/* Fallback label builder so every new CMS field is readable in the editor
+   without maintaining a manual map of a few hundred keys. */
+const humanize = (key) =>
+  key
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .replace(/([A-Za-z])(\d)/g, '$1 $2')
+    .replace(/(\d)([A-Za-z])/g, '$1 $2')
+    .replace(/[_-]+/g, ' ')
+    .split(' ')
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+
+const label = (field) => friendly[field] || humanize(field)
+
+const multiLine = (field) =>
+  /(body|text|subtitle|description|answer|statement|summary|content|note|about|bio)/i.test(field)
 
 const inputClass =
   'w-full rounded-sm border border-line bg-surface px-[11px] py-2 text-[12.5px] font-sans text-ink outline-none'
@@ -105,13 +129,13 @@ function PageTextTab() {
             <tbody>
               {pageFields[page].map((f) => (
                 <tr key={f} className="border-t border-line">
-                  <td className="px-3 py-2.5 font-bold whitespace-nowrap text-body">{friendly[f] || f}</td>
+                  <td className="px-3 py-2.5 font-bold whitespace-nowrap text-body">{label(f)}</td>
                   {langList.map((lang) => (
                     <td key={lang} className="p-2">
                       <textarea
                         value={field(f)[lang] || ''}
                         onChange={(e) => setPageField(page, f, lang, e.target.value)}
-                        rows={f.toLowerCase().includes('body') ? 3 : 1}
+                        rows={multiLine(f) ? 3 : 1}
                         className={cn(inputClass, 'resize-y')}
                       />
                     </td>
