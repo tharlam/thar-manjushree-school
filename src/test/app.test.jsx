@@ -78,22 +78,26 @@ describe('admissions form', () => {
 })
 
 describe('staff login', () => {
-  it('opens the dashboard without an email or password', async () => {
-    renderAt('#/admin/login')
-
-    fireEvent.click(await screen.findByRole('button', { name: /enter staff area/i }))
-
-    await waitFor(() => expect(window.location.hash).toBe('#/admin'))
-    expect(screen.queryByRole('button', { name: /enter staff area/i })).not.toBeInTheDocument()
-  })
-
   it('sends unauthenticated visitors to the login screen', async () => {
     renderAt('#/admin')
 
     await waitFor(() => expect(window.location.hash).toBe('#/admin/login'))
   })
 
-  it('keeps staff signed in across a reload', async () => {
+  it('reports that supabase auth is not configured when signing in', async () => {
+    renderAt('#/admin/login')
+
+    fireEvent.change(await screen.findByLabelText(/email/i), {
+      target: { value: 'admin@tharmanjushree.edu.np' },
+    })
+    fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'secret123' } })
+    fireEvent.click(screen.getByRole('button', { name: /^sign in$/i }))
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(/supabase is not configured/i)
+    expect(window.location.hash).toBe('#/admin/login')
+  })
+
+  it('ignores the legacy localStorage staff session', async () => {
     window.localStorage.setItem(
       'tm.staff.session',
       JSON.stringify({ name: 'Staff Member', role: 'staff', signedInAt: new Date().toISOString() }),
@@ -101,6 +105,6 @@ describe('staff login', () => {
 
     renderAt('#/admin')
 
-    await waitFor(() => expect(window.location.hash).toBe('#/admin'))
+    await waitFor(() => expect(window.location.hash).toBe('#/admin/login'))
   })
 })

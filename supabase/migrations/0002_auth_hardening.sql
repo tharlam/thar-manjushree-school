@@ -1,5 +1,9 @@
 -- Thar Manjushree School - auth hardening + server-side validation
 -- Run AFTER 0001_init.sql (order matters; `supabase db reset` applies in order).
+--
+-- IDEMPOTENT: safe to re-run. Policies/triggers are dropped before creation,
+-- functions use `create or replace`, and the CHECK constraints are guarded by
+-- catalogue lookups.
 
 -- =====================================================================
 -- 1. Restrict monk data
@@ -10,13 +14,15 @@
 
 drop policy if exists monks_read_public on public.monks;
 
+drop policy if exists "monks_read_admin" on public.monks;
 create policy "monks_read_admin" on public.monks
   for select to authenticated
   using (public.is_admin());
 
 revoke select on public.monks from anon;
 
-create or replace view public.monks_public as
+drop view if exists public.monks_public;
+create view public.monks_public as
 select id, code, name, class_id, status, joined, sponsor
 from public.monks;
 
@@ -129,14 +135,17 @@ begin
 end;
 $$;
 
+drop trigger if exists trg_admissions_sanitize on public.admissions;
 create trigger trg_admissions_sanitize
   before insert or update on public.admissions
   for each row execute function public.sanitize_public_form();
 
+drop trigger if exists trg_contact_messages_sanitize on public.contact_messages;
 create trigger trg_contact_messages_sanitize
   before insert or update on public.contact_messages
   for each row execute function public.sanitize_public_form();
 
+drop trigger if exists trg_donations_sanitize on public.donations;
 create trigger trg_donations_sanitize
   before insert or update on public.donations
   for each row execute function public.sanitize_public_form();

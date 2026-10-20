@@ -65,8 +65,8 @@ afterEach(() => {
   window.localStorage.clear()
 })
 
-describe('stored content', () => {
-  it('fills in fields added after a browser snapshot was saved', async () => {
+describe('bundled content fallback', () => {
+  it('renders the bundled defaults when Supabase is not configured', async () => {
     window.localStorage.setItem(
       'tms-app-store-v1',
       JSON.stringify({ content: { pages: { home: { heroTitle: { en: 'Saved hero' } } } } }),
@@ -74,7 +74,8 @@ describe('stored content', () => {
     window.location.hash = '#/'
     render(<App />)
 
-    expect(await screen.findByText('Saved hero')).toBeInTheDocument()
+    expect(await screen.findByText('Where Ancient Wisdom Awakens Modern Minds')).toBeInTheDocument()
+    expect(screen.queryByText('Saved hero')).not.toBeInTheDocument()
     expect(screen.getByText('Welcome to the School & Monastery')).toBeInTheDocument()
   })
 })

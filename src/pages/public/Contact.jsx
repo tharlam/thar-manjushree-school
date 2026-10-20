@@ -48,12 +48,12 @@ export default function Contact() {
     setBusy(true)
     setServerError('')
     try {
-      const ok = await addContactMessage({ ...form, interest })
-      if (ok) {
+      const result = await addContactMessage({ ...form, interest })
+      if (result.ok) {
         setDone(true)
         setForm({ name: '', email: '', subject: '', message: '' })
       } else {
-        setServerError('Failed to send message. Please try again.')
+        setServerError(result.error || 'Failed to send message. Please try again.')
       }
     } catch {
       setServerError('An error occurred. Please try again later.')

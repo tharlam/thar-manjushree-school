@@ -1,0 +1,4 @@
+Notes and scratch space for this project.
+
+Do not paste secrets here - this file is tracked by git.
+Keep keys in .env (gitignored).

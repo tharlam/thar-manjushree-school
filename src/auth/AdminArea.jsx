@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { AdminAuthProvider, useAdminAuth } from './AdminAuth.jsx'
+import { AuthProvider } from './AuthProvider.jsx'
+import RequireAuth from './RequireAuth.jsx'
 import DashboardLayout from '../layout/DashboardLayout.jsx'
 import RouteFallback from '../components/RouteFallback.jsx'
 
@@ -16,22 +17,9 @@ const UserManagement = lazy(() => import('../pages/UserManagement.jsx'))
 const Settings = lazy(() => import('../pages/Settings.jsx'))
 const Notification = lazy(() => import('../pages/Notification.jsx'))
 
-function RequireAuth({ children }) {
-  const { authenticated, status } = useAdminAuth()
-  if (status === 'checking') {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-mint">
-        <p className="text-sm font-semibold text-pine">Restoring session…</p>
-      </div>
-    )
-  }
-  if (!authenticated) return <Navigate to="/admin/login" replace />
-  return children
-}
-
 export default function AdminArea() {
   return (
-    <AdminAuthProvider>
+    <AuthProvider>
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="login" element={<AdminLogin />} />
@@ -50,6 +38,6 @@ export default function AdminArea() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
-    </AdminAuthProvider>
+    </AuthProvider>
   )
 }

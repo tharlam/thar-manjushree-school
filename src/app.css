@@ -1,4 +1,6 @@
 @import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+@config "./../tailwind.config.js";
 
 /* ============================================================================
    Design tokens — mirrors src/theme.js. Exposed as Tailwind utilities:

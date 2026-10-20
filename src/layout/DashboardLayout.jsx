@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import RouteFallback from '../components/RouteFallback.jsx'
-import { useAdminAuth } from '../auth/AdminAuth.jsx'
+import { useAuth } from '../auth/AuthProvider.jsx'
 import { useLanguage } from '../i18n.jsx'
 import { cn } from '../lib/cn.js'
 import {
@@ -119,7 +119,7 @@ function NotificationsDropdown() {
 }
 
 function ProfileBadge() {
-  const { logout } = useAdminAuth()
+  const { user, signOut } = useAuth()
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
@@ -132,10 +132,17 @@ function ProfileBadge() {
     return () => document.removeEventListener('mousedown', onClick)
   }, [])
 
-  const initials = 'TN'
+  const displayName = user?.user_metadata?.name || user?.email || 'Staff Member'
+  const subtitle = user?.user_metadata?.name && user?.email ? user.email : 'Staff account'
+  const initials = displayName
+    .split(/[\s@.]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join('')
 
   const handleSignOut = async () => {
-    await logout()
+    await signOut()
     navigate('/admin/login')
   }
 
@@ -150,8 +157,8 @@ function ProfileBadge() {
           {initials}
         </span>
         <span className="hidden text-left leading-tight sm:block">
-          <span className="block text-[13px] font-bold text-ink">Lama Tsering Norbu</span>
-          <span className="block text-[11px] text-muted">Head Administrator</span>
+          <span className="block text-[13px] font-bold text-ink">{displayName}</span>
+          <span className="block text-[11px] text-muted">{subtitle}</span>
         </span>
         <span className={cn('inline-flex text-muted transition-transform duration-150', open && 'rotate-180')}>
           <IconChevron size={14} color="currentColor" />
@@ -164,8 +171,8 @@ function ProfileBadge() {
               {initials}
             </span>
             <div>
-              <p className="m-0 text-[13px] font-bold text-ink">Lama Tsering Norbu</p>
-              <p className="mt-0.5 mb-0 text-xs text-muted">Head Administrator</p>
+              <p className="m-0 text-[13px] font-bold text-ink">{displayName}</p>
+              <p className="mt-0.5 mb-0 text-xs text-muted">{subtitle}</p>
             </div>
           </div>
           <div className="p-1.5">

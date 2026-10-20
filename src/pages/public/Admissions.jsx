@@ -104,7 +104,11 @@ export default function Admissions() {
     setError('')
     setBusy(true)
     try {
-      await addAdmission(form)
+      const result = await addAdmission(form)
+      if (!result.ok) {
+        setError(result.error || 'Failed to submit. Please try again.')
+        return
+      }
       setDone(f('formSuccessMessage'))
       setForm({ name: '', guardian: '', dob: '', age: '', phone: '', address: '', education: '', classRequested: 'Level 1', message: '' })
     } catch {
